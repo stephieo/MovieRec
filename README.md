@@ -17,18 +17,19 @@
 
 MovieRec is an MVP high-performing backend for a movie recommendation app. It provides RESTful APIs for movie discovery, user authentication, and favorite movie management. The system uses caching for performance optimization and demonstrates scalable backend architecture.
 
+
 ## Features
-- Movie Recommendation API
+- **Movie Recommendation API**
     - Integration with a third-party movie database API (TMDB)
     - Get weekly trending movies
     - Get recommendations based on user preferences
 
-- User authentication and management
+- **User authentication and management**
     - JWT-based authentication
     - User registration and login-
     - User Favorite movie management
 
-- Performance optimization
+- **Performance optimization**
     - Redis caching for frequently accessed data
     - Query optimization for database interactions
 
