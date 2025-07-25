@@ -1,0 +1,15 @@
+services:
+  web:
+    image: MovieRec
+    build: .
+    ports:
+      - "8000:8000"
+  db:
+    image: postgres:17
+    env_file: .dockerenv
+    environment:
+      - POSRTGRES_DB: ${POSTGRES_DB}
+      - POSTGRES_USER: ${POSTGRES_USER}
+      - POSTGRES_PASSWORD: ${POSTGRES_PASSWORD}
+  redis:
+    image: redis:8.0
