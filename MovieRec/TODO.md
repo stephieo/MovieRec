@@ -57,7 +57,7 @@
 ### Movie Data
 - [ ] Integrate with external movie API (TMDB)
     - [ ] trending weekly
-    - [ ]movie search
+    - [ ] movie search
     - [ ] specific movie
 - [ ] Create data import/sync functionality
 - [ ] Add movie poster/image handling
