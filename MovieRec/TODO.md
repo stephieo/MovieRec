@@ -5,7 +5,7 @@
 ### Environment & Docker
 - [x] Create `.env` file with database credentials
 - [x] Test Docker containers startup (`docker-compose up --build`)
-- [ ] Verify PostgreSQL connection from Django
+- [x] Verify PostgreSQL connection from Django after running migrations
 - [ ] Test Redis connection and caching
 - [ ] Set up Django settings for all dependencies
     - [x] `django-cors-headers==4.7.0`
@@ -55,7 +55,10 @@
 - [ ] Add movie reviews and comments
 
 ### Movie Data
-- [ ] Integrate with external movie API (TMDB/OMDB)
+- [ ] Integrate with external movie API (TMDB)
+    - [ ] trending weekly
+    - [ ]movie search
+    - [ ] specific movie
 - [ ] Create data import/sync functionality
 - [ ] Add movie poster/image handling
 - [ ] Implement movie metadata management
