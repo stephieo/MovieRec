@@ -56,25 +56,19 @@
 
 ### Movie Data
 - [ ] Integrate with external movie API (TMDB)
-    - [ ] trending weekly
+    - [x] trending weekly
     - [ ] movie search
-    - [ ] specific movie
+        - [ ] query parameter support
+    - [x] specific movie
+    - [ ] request error handling
+    - [ ] recommendation filtering
 - [ ] Create data import/sync functionality
 - [ ] Add movie poster/image handling
 - [ ] Implement movie metadata management
 
-## 🤖 Recommendation Engine (services app)
-
-### Algorithm Development
-- [ ] Implement collaborative filtering
-- [ ] Add content-based filtering
-- [ ] Create hybrid recommendation system
-- [ ] Add machine learning models (optional)
-- [ ] Implement user preference learning
-- [ ] Add trending movies functionality
 
 ### Caching & Performance
-- [ ] Implement Redis caching for recommendations
+- [ ] Implement Redis caching for 3rd party API calls
 - [ ] Cache popular movies and genres
 - [ ] Add database query optimization
 - [ ] Implement pagination for large datasets
