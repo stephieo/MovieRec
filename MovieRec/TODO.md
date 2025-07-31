@@ -82,27 +82,7 @@
 - [ ] Add authentication documentation
 - [ ] Test all API endpoints with Swagger UI
 
-### API Endpoints Structure
-```
-/api/v1/
-├── auth/
-│   ├── register/
-│   ├── login/
-│   ├── logout/
-│   └── profile/
-├── movies/
-│   ├── movies/
-│   ├── genres/
-│   ├── search/
-│   └── trending/
-├── recommendations/
-│   ├── for-you/
-│   ├── similar/
-│   └── popular/
-└── reviews/
-    ├── ratings/
-    └── comments/
-```
+
 
 ## 🧪 Testing & Quality
 
@@ -175,16 +155,16 @@
 
 ## 🎯 Current Priority Order
 
-1. **Environment Setup** - Get Docker and database working
-2. **Core Models** - Movie, User, Rating models
-3. **Authentication** - JWT login/register
-4. **Basic CRUD** - Movie management endpoints
-5. **Recommendation Engine** - Basic algorithm
-6. **API Documentation** - Swagger setup
-7. **Testing** - Core functionality tests
+1. **External API Integration** - TMDB API integration and data fetching
+2. **API Endpoints Creation** - RESTful endpoints for movie data
+3. **Core Models** - Movie, User, Rating models with API data structure
+4. **Authentication** - JWT login/register
+5. **Caching & Performance** - Redis caching for external API calls
+6. **API Documentation** - Swagger setup for all endpoints
+7. **Testing** - External API and endpoint tests
 8. **Deployment** - Production ready setup
 
 ---
 
-**Last Updated:** July 26, 2025
-**Project Status:** Setup Phase
+**Last Updated:** July 29, 2025
+**Project Status:** API Integration & Endpoint Creation Phase
