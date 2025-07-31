@@ -60,8 +60,16 @@ class TMDBApiClient:
         response = requests.get(url, headers=headers)
         return response.json()
 
-    def search_movies(self):
+    def search_movies(self, params_dict):
         """Search for movies using a query string.
+        
+        Args:
+            param_dict (dict): Dictionary containing search parameters for the API request.
+            Expected keys:
+            - query (str): The search query string for TV series titles.
+            - primary_release_year (str): The primary release year of the movie.
+            - language (str, optional): Language code (e.g., 'en-US'). Defaults to 'en-US'.
+            - include_adult (bool, optional): Include adult content. Defaults to False.
         
         Returns:
             dict: JSON response containing search results for movies.
@@ -76,12 +84,21 @@ class TMDBApiClient:
             "Authorization": self.auth_header
         }
 
-        response = requests.get(url, headers=headers)
+        response = requests.get(url, headers=headers, params=params_dict)
         return response.json()
     
-    def search_series(self):
+    def search_series(self, params_dict):
         """Search for TV series using a query string.
         
+        Args:
+            param_dict (dict): Dictionary containing search parameters for the API request.
+            Expected keys:
+            - query (str): The search query string for TV series titles.
+            - first_air_date_year (str, optional): The first air date year of the series.
+            - year (str, optional): The any episode air date of series.
+            - language (str, optional): Language code (e.g., 'en-US'). Defaults to 'en-US'.
+            - include_adult (bool, optional): Include adult content. Defaults to False.
+
         Returns:
             dict: JSON response containing search results for TV series.
             
@@ -89,14 +106,13 @@ class TMDBApiClient:
             requests.RequestException: If the API request fails.
             
         """
-        # TODO: This method currently doesn't accept query parameters. Add query parameter support.
         url = f"{self.base_url}/search/tv"
         headers = {
             "accept":  "application/json",
             "Authorization": self.auth_header
         }
 
-        response = requests.get(url, headers=headers)
+        response = requests.get(url, headers=headers, params=params_dict)
         return response.json()
     
     def get_movie(self, movie_id):
@@ -189,4 +205,5 @@ if __name__ == "__main__":
     print(f"API Token loaded: {client.api_access_token[:10]}...")  # Only show first 10 chars for security
     # print(client.get_movie(617126))
     # print(client.get_trending_movies())
-    print(client.get_movie_recommendations(617126))
+    # print(client.get_movie_recommendations(617126))
+    

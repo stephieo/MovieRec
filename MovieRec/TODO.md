@@ -56,9 +56,9 @@
 
 ### Movie Data
 - [ ] Integrate with external movie API (TMDB)
-    - [x] trending weekly
-    - [ ] movie search
-        - [ ] query parameter support
+    - [x] trending weekly movies and series
+    - [x] movie  and series search
+        - [x] query parameter support
     - [x] specific movie
     - [ ] request error handling
     - [ ] recommendation filtering
