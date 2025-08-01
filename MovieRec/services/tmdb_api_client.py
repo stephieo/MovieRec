@@ -143,6 +143,9 @@ class TMDBApiClient:
         Raises:
             requests.RequestException: If the API request fails.
         """
+        if not isinstance(movie_id, int) or movie_id <= 0:
+            raise ValueError(f"movie_id must be a positive integer")
+
         url = f"{self.base_url}/movie/{movie_id}"
         headers = {
             "accept":  "application/json",
@@ -165,6 +168,9 @@ class TMDBApiClient:
         Raises:
             requests.RequestException: If the API request fails.
         """
+        if not isinstance(series_id, int) or series_id <= 0:
+            raise ValueError(f"series_id must be a positive integer")
+    
         url = f"{self.base_url}/movie/{series_id}"
         headers = {
             "accept":  "application/json",
@@ -188,6 +194,10 @@ class TMDBApiClient:
             requests.RequestException: If the API request fails.
             
         """
+
+        if not isinstance(movie_id, int) or movie_id <= 0:
+            raise ValueError(f"movie_id must be a positive integer")
+                                    
         url = f"{self.base_url}/movie/{movie_id}/recommendations"
         headers = {
             "accept":  "application/json",
