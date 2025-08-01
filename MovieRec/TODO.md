@@ -13,13 +13,14 @@
     - [x] `django-filter==25.1`
     - [x] `django-redis==6.0.0`
     - [x] `djangorestframework==3.16.0`
-    - [ ] `djangorestframework_simplejwt==5.5.1`
+    - [x] `djangorestframework_simplejwt==5.5.1`
     - [ ] `drf-nested-routers==0.94.2`
     - [x] `drf-yasg==1.21.10`
 - [ ] Configure Django settings for production vs development
 
 ### Database & Models
-- [ ] Design movie database schema (ERD)
+- #FIXME [ ] Roll back migration to  the beginning to alter AUTH_USER_MODEL
+- [x] Design movie database schema (ERD)
 - [ ] Create Movie model (title, genre, year, rating, description, etc.)
 - [ ] Create User profile model (preferences, ratings history)
 - [ ] Create Rating/Review model (user ratings and reviews)
@@ -146,7 +147,7 @@
 ### Project Documentation
 - [ ] Update README.md with setup instructions
 - [ ] Create API usage guide
-- [ ] Add database schema documentation
+- [ ] Add database schema documentation 
 - [ ] Create deployment guide
 - [ ] Add troubleshooting section
 
