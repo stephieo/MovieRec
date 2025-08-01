@@ -60,11 +60,10 @@
     - [x] movie  and series search
         - [x] query parameter support
     - [x] specific movie
-    - [ ] request error handling
-    - [ ] recommendation filtering
-- [ ] Create data import/sync functionality
-- [ ] Add movie poster/image handling
-- [ ] Implement movie metadata management
+    - [x] request error handling
+    - [ ]item id input validation ( API level?)
+    -#FUTURE: [ ] recommendation filtering
+-#FUTURE: [ ] Add movie poster/image handling?
 
 
 ### Caching & Performance

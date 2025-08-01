@@ -1,8 +1,20 @@
 import requests
 
 from django.conf import settings
+from typing import TypedDict, NotRequired
 
 
+class MovieSearchParams(TypedDict):
+    query: str
+    primary_release_year: str
+    language: NotRequired[str]
+    include_adult: NotRequired[bool] 
+
+class SearchParams(TypedDict):
+    query: str
+    primary_release_year: str
+    language: NotRequired[str]
+    include_adult: NotRequired[bool] 
 
 #TODO: request error handling
 
@@ -40,6 +52,7 @@ class TMDBApiClient:
         }
 
         response = requests.get(url, headers=headers)
+        response.raise_for_status()  # Raise an error for bad responses
         return response.json()
     
     def get_trending_series(self):
@@ -58,9 +71,10 @@ class TMDBApiClient:
         }
 
         response = requests.get(url, headers=headers)
+        response.raise_for_status()  # Raise an error for bad responses
         return response.json()
 
-    def search_movies(self, params_dict):
+    def search_movies(self, params_dict: MovieSearchParams) -> dict:
         """Search for movies using a query string.
         
         Args:
@@ -85,6 +99,7 @@ class TMDBApiClient:
         }
 
         response = requests.get(url, headers=headers, params=params_dict)
+        response.raise_for_status()  # Raise an error for bad responses
         return response.json()
     
     def search_series(self, params_dict):
@@ -113,16 +128,17 @@ class TMDBApiClient:
         }
 
         response = requests.get(url, headers=headers, params=params_dict)
+        response.raise_for_status()  # Raise an error for bad responses
         return response.json()
     
-    def get_movie(self, movie_id):
+    def get_movie(self, movie_id: int) -> dict:
         """Get detailed information for a specific movie.
         
         Args:
             movie_id (int): The TMDB movie ID.
             
         Returns:
-            str: JSON response containing movie details.
+            dict: JSON response containing movie details.
             
         Raises:
             requests.RequestException: If the API request fails.
@@ -134,10 +150,32 @@ class TMDBApiClient:
         }
 
         response = requests.get(url, headers=headers)
+        response.raise_for_status()  # Raise an error for bad responses
         return response.json()
 
+    def get_series(self, series_id: int) -> dict:
+        """Get detailed information for a specific tv series.
+        
+        Args:
+            series_id (int): The TMDB movie ID.
+            
+        Returns:
+            dict: JSON response containing series details.
+            
+        Raises:
+            requests.RequestException: If the API request fails.
+        """
+        url = f"{self.base_url}/movie/{series_id}"
+        headers = {
+            "accept":  "application/json",
+            "Authorization": self.auth_header
+        }
 
-    def get_movie_recommendations(self, movie_id):
+        response = requests.get(url, headers=headers)
+        response.raise_for_status()  # Raise an error for bad responses
+        return response.json()
+
+    def get_movie_recommendations(self, movie_id: int) -> dict:
         """Get movie recommendations based on a specific movie.
         
         Args:
@@ -157,11 +195,11 @@ class TMDBApiClient:
         }
 
         response = requests.get(url, headers=headers)
-        #TODO: add custom logic to filter and return only movies with the same genre tag
+        #FUTURE: add custom logic to filter and return only movies with the same genre tag
+        response.raise_for_status()  # Raise an error for bad responses
         return response.json()
 
-
-    def get_series_recommendations(self, series_id):
+    def get_series_recommendations(self, series_id: int) -> dict:
         """Get TV series recommendations based on a specific series.
         
         Args:
@@ -183,7 +221,8 @@ class TMDBApiClient:
         }
 
         response = requests.get(url, headers=headers)
-        #TODO: add custom logic to filter and return only series with the same genre tag
+        #FUTURE: add custom logic to filter and return only series with the same genre tag
+        response.raise_for_status()  # Raise an error for bad responses
         return response.json()
 
 
@@ -202,7 +241,7 @@ if __name__ == "__main__":
     django.setup()
     
     client = TMDBApiClient()
-    print(f"API Token loaded: {client.api_access_token[:10]}...")  # Only show first 10 chars for security
+    # print(f"API Token loaded: {client.api_access_token[:10]}...")  # Only show first 10 chars for security
     # print(client.get_movie(617126))
     # print(client.get_trending_movies())
     # print(client.get_movie_recommendations(617126))
