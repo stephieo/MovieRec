@@ -1,6 +1,22 @@
 from rest_framework import serializers
-from .models import Favorites
+from .models import Favorites, User
 from  services.tmdb_api_client import TMDBApiClient
+
+class UserRegistrationSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = User
+        fields = ['id', 'first_name', 'last_name', 'username', 'password', 'email' ]
+        read_only_fields = ['id']
+        extra_kwargs = {'password': {'write_only': True}}
+
+    def create(self, validated_data):
+        user = User.objects.create_user(**validated_data)
+        return user
+
+class UserLoginSerializer(serializers.Serializer):
+    username = serializers.CharField()
+    password = serializers.CharField(write_only=True)
+
 
 class FavoritesSerializer(serializers.ModelSerializer):
     full_poster_url = serializers.SerializerMethodField()

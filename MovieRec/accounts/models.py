@@ -5,6 +5,9 @@ import uuid
 
 
 class User(AbstractUser):
+    USERNAME_FIELD = 'username'
+    REQUIRED_FIELDS = ['first_name', 'last_name', 'email', 'password',]
+
     class Meta:
         db_table = 'accounts_user'
     
@@ -14,6 +17,9 @@ class User(AbstractUser):
 
 
 class Favorites(models.Model):
+    class Meta: 
+        db_table = 'accounts_favorites'
+    
     id = models.UUIDField(primary_key=True, default=uuid.uuid4)
     user = models.ForeignKey(User, on_delete=models.CASCADE, related_name='favorites')
     tmdb_id = models.IntegerField(unique=True)
