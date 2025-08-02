@@ -235,6 +235,13 @@ class TMDBApiClient:
         response.raise_for_status()  # Raise an error for bad responses
         return response.json()
 
+    def get_poster_url(self, poster_path:str) -> str:
+        if poster_path == "null":
+            url = f"https://placehold.co/185x280?text=No+Image+Found&font=playfair+display"
+        
+        url = f"{self.base_url}/t/p/w185/{poster_path}."
+        return url
+    
 
 if __name__ == "__main__":
     # Setup Django only when running standalone for testing

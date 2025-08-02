@@ -21,11 +21,8 @@
 ### Database & Models
 - #FIXME [ ] Roll back migration to  the beginning to alter AUTH_USER_MODEL
 - [x] Design movie database schema (ERD)
-- [ ] Create Movie model (title, genre, year, rating, description, etc.)
 - [ ] Create User profile model (preferences, ratings history)
-- [ ] Create Rating/Review model (user ratings and reviews)
-- [ ] Create Genre model and many-to-many relationships
-- [ ] Run initial migrations
+- [x] Run initial migrations
 - [ ] Create database seed data/fixtures
 
 ## 🔐 Authentication & Authorization
