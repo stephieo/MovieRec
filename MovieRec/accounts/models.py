@@ -1,14 +1,21 @@
 from django.db import models
-from django.contrib.auth.models import AbstractUser 
+from django.contrib.auth.models import AbstractUser
+import uuid
 # Create your models here.
 
 
 class User(AbstractUser):
-    pass
+    class Meta:
+        db_table = 'accounts_user'
+    
+    email = models.EmailField(max_length= 254, unique=True)
+    created_at = models.DateTimeField(auto_now_add=True) 
 
 
-class Favorites(models.Models):
-    id = models.UUIDField(primary_key=true, default=uuid.uuid4)
-    user = models.ForeignKey(User, on_delete=CASCADE, related_name='favorites')
-    tmdb_id = models.IntegerField(unique=True, max_digits=10)
-    created_at models.DateTimeField(auto_now_add=True)
+
+class Favorites(models.Model):
+    id = models.UUIDField(primary_key=True, default=uuid.uuid4)
+    user = models.ForeignKey(User, on_delete=models.CASCADE, related_name='favorites')
+    tmdb_id = models.IntegerField(unique=True)
+    poster_path = models.CharField(max_length=500, default="null")
+    created_at = models.DateTimeField(auto_now_add=True)
