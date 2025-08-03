@@ -44,19 +44,42 @@ class LoginAPIView(generics.CreateAPIView):
                 )
             return Response({'error': 'Invalid credentials'}, status=status.HTTP_401_UNAUTHORIZED)
 
-class UserAPIView(generics.RetrieveUpdateAPIView):
+class UserAPIView(generics.RetrieveAPIView):
     serializer_class = UserProfileSerializer
     permission_classes = [IsAuthenticated]
 
     def get_object(self):
         return self.request.user
 
+class UserFavoritesListAPIView(generics.ListAPIView):
+    serializer_class = FavoritesSerializer
+    permission_classes = [IsAuthenticated]
+    
+    def get_queryset(self):
+        """Return favorites for the authenticated user only."""
+        return Favorites.objects.filter(user=self.request.user)
 
+class UserFavoritesCreateAPIView(generics.CreateAPIView):
+    serializer_class = FavoritesSerializer
+    permission_classes = [IsAuthenticated]
+    
+    def perform_create(self, serializer):
+        """Automatically associate the favorite with the current user."""
+        serializer.save(user=self.request.user)
 
-class UserFavoritesAPIView(APIView):
-    def get(self, request):
-        # user_id = request.user.ie
-        favorites = Favorites.objects.filter(user_id=request.user.id)
-        serializer = FavoritesSerializer(favorites, many=True)
-        return  Response(serializer.data)
-
+class UserFavoritesDeleteAPIView(generics.DestroyAPIView):
+    serializer_class = FavoritesSerializer
+    permission_classes = [IsAuthenticated]
+    lookup_field = 'tmdb_id'  # Use tmdb_id instead of pk for lookup
+    
+    def get_queryset(self):
+        """Only allow users to delete their own favorites."""
+        return Favorites.objects.filter(user=self.request.user)
+    
+    def destroy(self, request, *args, **kwargs):
+        instance = self.get_object()
+        self.perform_destroy(instance)
+        return Response(
+            {'message': 'Favorite removed successfully'}, 
+            status=status.HTTP_200_OK
+        )
