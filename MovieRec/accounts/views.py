@@ -1,5 +1,5 @@
 from .models import Favorites, User
-from .serializers import FavoritesSerializer, UserRegistrationSerializer, UserLoginSerializer
+from .serializers import FavoritesSerializer, UserRegistrationSerializer, UserLoginSerializer, UserProfileSerializer
 from rest_framework.decorators import api_view
 from rest_framework.response import Response
 from rest_framework.views import APIView
@@ -44,7 +44,12 @@ class LoginAPIView(generics.CreateAPIView):
                 )
             return Response({'error': 'Invalid credentials'}, status=status.HTTP_401_UNAUTHORIZED)
 
+class UserAPIView(generics.RetrieveUpdateAPIView):
+    serializer_class = UserProfileSerializer
+    permission_classes = [IsAuthenticated]
 
+    def get_object(self):
+        return self.request.user
 
 
 

@@ -21,18 +21,18 @@
 ### Database & Models
 - #FIXME [ ] Roll back migration to  the beginning to alter AUTH_USER_MODEL
 - [x] Design movie database schema (ERD)
-- [ ] Create User profile model (preferences, ratings history)
+- [x] Create User profile  and Faves model 
 - [x] Run initial migrations
 - [ ] Create database seed data/fixtures
 
 ## 🔐 Authentication & Authorization
 
 ### User Management (accounts app)
-- [ ] Implement user registration endpoint
-- [ ] Implement JWT login/logout endpoints
-- [ ] Add password reset functionality
+- [x] Implement user registration endpoint
+- [x] Implement JWT login/logout endpoints
+- #FUTURE[ ] Add password reset functionality
 - [ ] Create user profile management
-- [ ] Add email verification (optional)
+- #FUTURE[ ] Add email verification (optional)
 - [ ] Implement role-based permissions (user/admin)
 
 ### Security
@@ -73,11 +73,11 @@
 ## 📚 API Documentation
 
 ### DRF & Swagger Setup
-- [ ] Configure drf-yasg for API documentation
+- [x] Configure drf-yasg for API documentation
 - [ ] Add proper API endpoint descriptions
 - [ ] Create API usage examples
 - [ ] Add authentication documentation
-- [ ] Test all API endpoints with Swagger UI
+- [x] Test all API endpoints with Swagger UI
 
 
 
@@ -94,7 +94,7 @@
 ### Code Quality
 - [ ] Add code linting (flake8/black)
 - [ ] Implement pre-commit hooks
-- [ ] Add type hints where appropriate
+- [x] Add type hints where appropriate
 - [ ] Create proper error handling
 - [ ] Add logging configuration
 
@@ -103,7 +103,7 @@
 ### CI/CD Pipeline
 - [ ] Set up GitHub Actions workflow
 - [ ] Add automated testing in CI
-- [ ] Configure Docker image building
+- [x] Configure Docker image building
 - [ ] Add deployment automation
 - [ ] Set up environment-specific configs
 
@@ -129,7 +129,6 @@
 - [ ] Add database indexing
 - [ ] Implement query optimization
 - [ ] Add response compression
-- [ ] Configure static file caching
 - [ ] Monitor and optimize API response times
 
 ### Security Hardening
