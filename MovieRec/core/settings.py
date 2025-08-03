@@ -12,6 +12,7 @@ https://docs.djangoproject.com/en/5.2/ref/settings/
 import environ
 import os
 from pathlib import Path
+from datetime import timedelta
 
 # Build paths inside the project like this: BASE_DIR / 'subdir'.
 BASE_DIR = Path(__file__).resolve().parent.parent
@@ -114,11 +115,28 @@ CACHES = {
     }
 }
 
+# Swagger config
+
+SWAGGER_SETTINGS = {
+    'SECURITY_DEFINITIONS': {
+        'Bearer': {
+            'type': 'apiKey',
+            'name': 'Authorization',
+            'in': 'header'
+        }
+    },
+    'USE_SESSION_AUTH': False,
+    'JSON_EDITOR': True,
+}
+
 #  Django Rest Framework Configuration
 REST_FRAMEWORK = {
      'DEFAULT_AUTHENTICATION_CLASSES': (
         'rest_framework_simplejwt.authentication.JWTAuthentication',
-    )
+    ),
+    'DEFAULT_PERMISSION_CLASSES': [
+        'rest_framework.permissions.IsAuthenticated',
+    ]
 }
 
 # JWT  config
