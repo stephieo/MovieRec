@@ -53,6 +53,7 @@ class UserAPIView(generics.RetrieveAPIView):
     def get_object(self):
         return self.request.user
 class UserFavoritesListAPIView(generics.ListAPIView):
+    # FUTURE: would be nice to categorize faves into movie and tv
     serializer_class = FavoritesSerializer
     permission_classes = [IsAuthenticated]
     

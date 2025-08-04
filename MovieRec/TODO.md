@@ -3,31 +3,34 @@
 ## 🚀 Project Setup & Configuration
 
 ### Environment & Docker
+
 - [x] Create `.env` file with database credentials
 - [x] Test Docker containers startup (`docker-compose up --build`)
 - [x] Verify PostgreSQL connection from Django after running migrations
 - [ ] Test Redis connection and caching
 - [ ] Set up Django settings for all dependencies
-    - [x] `django-cors-headers==4.7.0`
-    - [x] `django-environ==0.12.0`
-    - [x] `django-filter==25.1`
-    - [x] `django-redis==6.0.0`
-    - [x] `djangorestframework==3.16.0`
-    - [x] `djangorestframework_simplejwt==5.5.1`
-    - [ ] `drf-nested-routers==0.94.2`
-    - [x] `drf-yasg==1.21.10`
+  - [x] `django-cors-headers==4.7.0`
+  - [x] `django-environ==0.12.0`
+  - [x] `django-filter==25.1`
+  - [x] `django-redis==6.0.0`
+  - [x] `djangorestframework==3.16.0`
+  - [x] `djangorestframework_simplejwt==5.5.1`
+  - [ ] `drf-nested-routers==0.94.2`
+  - [x] `drf-yasg==1.21.10`
 - [ ] Configure Django settings for production vs development
 
 ### Database & Models
-- #FIXME [ ] Roll back migration to  the beginning to alter AUTH_USER_MODEL
+
+- #FIXME [ ] Roll back migration to the beginning to alter AUTH_USER_MODEL
 - [x] Design movie database schema (ERD)
-- [x] Create User profile  and Faves model 
+- [x] Create User profile and Faves model
 - [x] Run initial migrations
 - [ ] Create database seed data/fixtures
 
 ## 🔐 Authentication & Authorization
 
 ### User Management (accounts app)
+
 - [x] Implement user registration endpoint
 - [x] Implement JWT login/logout endpoints
 - #FUTURE[ ] Add password reset functionality
@@ -35,7 +38,20 @@
 - #FUTURE[ ] Add email verification (optional)
 - [ ] Implement role-based permissions (user/admin)
 
+### User Favorites Management
+
+- [x] Create Favorites model with TMDB integration
+- [x] Implement favorites list endpoint (GET)
+- [x] Implement add to favorites endpoint (POST)
+- [x] Implement remove from favorites endpoint (DELETE)
+- [x] Add automatic TMDB data fetching (title/name, poster)
+- [x] Add content type validation (movie/tv)
+- [ ] Add duplicate favorite prevention
+- [ ]#FUTURE: Add favorites export functionality
+- [ ]#FUTURE: Implement favorites statistics/analytics
+
 ### Security
+
 - [ ] Configure CORS headers properly
 - [ ] Add rate limiting to API endpoints
 - [ ] Implement input validation and sanitization
@@ -43,47 +59,55 @@
 
 ## 🎬 Core Movie Features
 
-### Movie Management (movies app)
-- [ ] Create movie CRUD endpoints
-- [ ] Implement movie search and filtering
-- [ ] Add genre-based filtering
-- [ ] Create movie recommendation algorithm
-- [ ] Add movie rating system
-- [ ] Implement user watchlist functionality
-- [ ] Add movie reviews and comments
+### Movie Management (movies app) - 🚀 SPRINT FOCUS
+
+- [ ] Create movies app (`python manage.py startapp movies`)
+- [ ] Create movie API views using TMDB client
+  - [ ] TrendingMoviesAPIView
+  - [ ] MovieSearchAPIView
+  - [ ] MovieDetailAPIView
+  - [ ] MovieRecommendationsAPIView
+- [ ] Configure movie app URLs
+- [ ] Add movie endpoints to main URLs
+- #FUTURE[ ] Implement movie search and filtering
+- #FUTURE[ ] Add genre-based filtering
+- #FUTURE[ ] Create movie recommendation algorithm
+- #FUTURE[ ] Add movie rating system
+- #FUTURE[ ] Implement user watchlist functionality
+- #FUTURE[ ] Add movie reviews and comments
 
 ### Movie Data
-- [ ] Integrate with external movie API (TMDB)
-    - [x] trending weekly movies and series
-    - [x] movie  and series search
-        - [x] query parameter support
-    - [x] specific movie
-    - [x] request error handling
-    - [ ]item id input validation ( API level?)
-    -#FUTURE: [ ] recommendation filtering
--#FUTURE: [ ] Add movie poster/image handling?
 
+- [ ] Integrate with external movie API (TMDB) - [x] trending weekly movies and series - [x] movie and series search - [x] query parameter support - [x] specific movie - [x] request error handling - [ ]item id input validation ( API level?)
+      -#FUTURE: [ ] recommendation filtering
+      -#FUTURE: [ ] Add movie poster/image handling?
 
-### Caching & Performance
-- [ ] Implement Redis caching for 3rd party API calls
-- [ ] Cache popular movies and genres
-- [ ] Add database query optimization
-- [ ] Implement pagination for large datasets
+### Caching & Performance - 🚀 SPRINT FOCUS
+
+- [ ] Implement Redis caching for TMDB API calls
+  - [ ] Cache trending movies (1 hour TTL)
+  - [ ] Cache movie details (24 hour TTL)
+  - [ ] Cache search results (30 min TTL)
+  - [ ] Cache recommendations (2 hour TTL)
+- [ ] Test Redis connection and caching
+- #FUTURE[ ] Cache popular movies and genres
+- #FUTURE[ ] Add database query optimization
+- #FUTURE[ ] Implement pagination for large datasets
 
 ## 📚 API Documentation
 
 ### DRF & Swagger Setup
+
 - [x] Configure drf-yasg for API documentation
 - [ ] Add proper API endpoint descriptions
 - [ ] Create API usage examples
 - [ ] Add authentication documentation
 - [x] Test all API endpoints with Swagger UI
 
-
-
 ## 🧪 Testing & Quality
 
 ### Testing Implementation
+
 - [ ] Set up Django test framework
 - [ ] Write unit tests for models
 - [ ] Create API endpoint tests
@@ -92,6 +116,7 @@
 - [ ] Create integration tests for Docker setup
 
 ### Code Quality
+
 - [ ] Add code linting (flake8/black)
 - [ ] Implement pre-commit hooks
 - [x] Add type hints where appropriate
@@ -101,6 +126,7 @@
 ## 🚀 Deployment & DevOps
 
 ### CI/CD Pipeline
+
 - [ ] Set up GitHub Actions workflow
 - [ ] Add automated testing in CI
 - [x] Configure Docker image building
@@ -108,6 +134,7 @@
 - [ ] Set up environment-specific configs
 
 ### Production Setup
+
 - [ ] Configure production database settings
 - [ ] Set up static file serving
 - [ ] Add monitoring and logging
@@ -117,6 +144,7 @@
 ## 📱 Frontend Considerations (Future)
 
 ### API Preparation
+
 - [ ] Ensure API is frontend-ready
 - [ ] Add proper error responses
 - [ ] Implement consistent data formats
@@ -126,12 +154,14 @@
 ## 🔧 Technical Debt & Improvements
 
 ### Performance Optimization
+
 - [ ] Add database indexing
 - [ ] Implement query optimization
 - [ ] Add response compression
 - [ ] Monitor and optimize API response times
 
 ### Security Hardening
+
 - [ ] Add request validation
 - [ ] Implement rate limiting
 - [ ] Add security headers
@@ -141,26 +171,38 @@
 ## 📝 Documentation
 
 ### Project Documentation
+
 - [ ] Update README.md with setup instructions
 - [ ] Create API usage guide
-- [ ] Add database schema documentation 
+- [ ] Add database schema documentation
 - [ ] Create deployment guide
 - [ ] Add troubleshooting section
 
 ---
 
-## 🎯 Current Priority Order
+## 🎯 Current Priority Order (5 Days Sprint)
 
-1. **External API Integration** - TMDB API integration and data fetching
-2. **API Endpoints Creation** - RESTful endpoints for movie data
-3. **Core Models** - Movie, User, Rating models with API data structure
-4. **Authentication** - JWT login/register
-5. **Caching & Performance** - Redis caching for external API calls
-6. **API Documentation** - Swagger setup for all endpoints
-7. **Testing** - External API and endpoint tests
-8. **Deployment** - Production ready setup
+**HIGH PRIORITY (Must Complete):**
+
+1. **Movie Endpoints Creation** - Core movie API endpoints
+
+   - [ ] Create movies app structure
+   - [ ] Trending movies endpoint (GET /api/movies/trending/)
+   - [ ] Movie search endpoint (GET /api/movies/search/)
+   - [ ] Movie details endpoint (GET /api/movies/{id}/)
+   - [ ] Movie recommendations endpoint (GET /api/movies/{id}/recommendations/)
+
+2. **Basic Caching Implementation** - Redis caching for TMDB API calls
+   - [ ] Set up Redis caching for TMDB API responses
+   - [ ] Cache trending movies (1 hour TTL)
+   - [ ] Cache movie details (24 hour TTL)
+   - [ ] Cache search results (30 min TTL)
+
+**MEDIUM PRIORITY (If Time Allows):** 3. **API Documentation** - Update Swagger docs for movie endpoints 4. **URL Configuration** - Ensure all endpoints are properly routed 5. **Error Handling** - Proper error responses for movie endpoints
+
+**LOW PRIORITY (Future Sprint):** 6. **Testing** - Basic endpoint tests 7. **Advanced Features** - Filtering, pagination, etc.
 
 ---
 
-**Last Updated:** July 29, 2025
-**Project Status:** API Integration & Endpoint Creation Phase
+**Last Updated:** August 4, 2025
+**Project Status:** 🚀 SPRINT MODE - Movie Endpoints & Caching (5 Days)
