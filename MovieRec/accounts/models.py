@@ -23,5 +23,6 @@ class Favorites(models.Model):
     id = models.UUIDField(primary_key=True, default=uuid.uuid4)
     user = models.ForeignKey(User, on_delete=models.CASCADE, related_name='favorites')
     tmdb_id = models.IntegerField(unique=True)
-    poster_path = models.CharField(max_length=500, default="null")
+    item_name = models.CharField(max_length=250, default="null")
+    poster_url = models.CharField(max_length=500, default="null")
     created_at = models.DateTimeField(auto_now_add=True)

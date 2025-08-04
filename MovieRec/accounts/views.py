@@ -7,7 +7,10 @@ from rest_framework.permissions import IsAuthenticated, AllowAny
 from rest_framework import status
 from rest_framework import generics
 from django.contrib.auth import authenticate
-from rest_framework_simplejwt.tokens import RefreshToken
+# from rest_framework_simplejwt.tokens import RefreshToken
+from drf_yasg.utils import swagger_auto_schema
+from  services.tmdb_api_client import TMDBApiClient
+
 
 # Create your views here.
 
@@ -22,7 +25,6 @@ class RegisterAPIView(generics.CreateAPIView):
     permission_classes = [AllowAny]
 
 class LoginAPIView(generics.CreateAPIView):
-    queryset =User.objects.all()
     serializer_class = UserLoginSerializer
     permission_classes = [AllowAny]
 
@@ -33,12 +35,12 @@ class LoginAPIView(generics.CreateAPIView):
             password = serializer.validated_data['password']
             user = authenticate(username=username, password=password)
             if user:
-                tokens = RefreshToken.for_user(user)
+                # tokens = RefreshToken.for_user(user)
                 return Response (
                     {
                         'message': 'Login Successful',
-                        'access': str(tokens.access_token),
-                        'refresh': str(tokens)
+                        # 'access': str(tokens.access_token),
+                        # 'refresh': str(tokens)
                     },
                     status=status.HTTP_200_OK
                 )
@@ -50,7 +52,6 @@ class UserAPIView(generics.RetrieveAPIView):
 
     def get_object(self):
         return self.request.user
-
 class UserFavoritesListAPIView(generics.ListAPIView):
     serializer_class = FavoritesSerializer
     permission_classes = [IsAuthenticated]
@@ -64,8 +65,30 @@ class UserFavoritesCreateAPIView(generics.CreateAPIView):
     permission_classes = [IsAuthenticated]
     
     def perform_create(self, serializer):
-        """Automatically associate the favorite with the current user."""
-        serializer.save(user=self.request.user)
+        """Automatically associate the favorite with the current user 
+           and fetch item details from TMDB.
+        """
+        client = TMDBApiClient()
+        tmdb_id = serializer.validated_data.get('tmdb_id')
+        item_type = serializer.validated_data.get('type')
+        
+        if item_type == "movie":
+            item_details = client.get_movie(tmdb_id)
+            item_name = item_details.get("title")  
+        else:  # item_type == "tv"
+            item_details = client.get_series(tmdb_id)
+            item_name = item_details.get("name")  
+        
+        # construct poster url
+        poster_path = item_details.get("poster_path")
+        poster_url = client.get_poster_url(poster_path)
+
+        
+        serializer.save(
+            user=self.request.user,
+            item_name=item_name,
+            poster_url=poster_url
+        )
 
 class UserFavoritesDeleteAPIView(generics.DestroyAPIView):
     serializer_class = FavoritesSerializer

@@ -20,20 +20,18 @@ class UserLoginSerializer(serializers.Serializer):
 class UserProfileSerializer(serializers.Serializer):
     class Meta:
         model = User
-        fields = ['username', 'first_name', 'last_name', 'last_login', 'password']
-
+        fields = ['username', 'first_name', 'last_name', 'last_login', 'email']
 
 class FavoritesSerializer(serializers.ModelSerializer):
-    full_poster_url = serializers.SerializerMethodField()
+    type = serializers.ChoiceField(choices=['movie', 'tv'], write_only=True, help_text="Content type: 'movie' or 'tv'")
+    
     class Meta:
         model = Favorites
-        exclude = ['poster_path']
-        read_only_fields = ['id']
-
-
-        def get_full_poster_url(self, obj):
-            client = TMDBApiClient()
-            poster_url = client.get_poster_url(obj.poster_path)
-            return poster_url
+        fields = ['id', 'tmdb_id', 'item_name', 'poster_url', 'created_at', 'type']
+        read_only_fields = ['id', 'item_name', 'poster_url', 'created_at'] #LEARN: this means  the client doesnt need to provide this in the request
+    
+    def create(self, validated_data):
+        validated_data.pop('type', None)
+        return super().create(validated_data) 
 
     

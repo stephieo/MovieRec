@@ -160,7 +160,7 @@ class TMDBApiClient:
         """Get detailed information for a specific tv series.
         
         Args:
-            series_id (int): The TMDB movie ID.
+            series_id (int): The TMDB series ID.
             
         Returns:
             dict: JSON response containing series details.
@@ -171,7 +171,7 @@ class TMDBApiClient:
         if not isinstance(series_id, int) or series_id <= 0:
             raise ValueError(f"series_id must be a positive integer")
     
-        url = f"{self.base_url}/movie/{series_id}"
+        url = f"{self.base_url}/tv/{series_id}"
         headers = {
             "accept":  "application/json",
             "Authorization": self.auth_header
@@ -235,12 +235,21 @@ class TMDBApiClient:
         response.raise_for_status()  # Raise an error for bad responses
         return response.json()
 
-    def get_poster_url(self, poster_path:str) -> str:
-        if poster_path == "null":
-            url = f"https://placehold.co/185x280?text=No+Image+Found&font=playfair+display"
+    def get_poster_url(self, poster_path: int) -> str:
+        """Generate full poster URL by fetching details from TMDB API.
         
-        url = f"{self.base_url}/t/p/w185/{poster_path}."
-        return url
+        Args:
+            tmdb_id (int): The TMDB ID for the movie or TV series.
+            
+        Returns:
+            str: Complete URL to the poster image or placeholder if no image.
+        """
+        
+        if not poster_path or poster_path == "null":
+            return "https://placehold.co/185x280?text=No+Image+Found&font=playfair+display"
+                    
+        return f"https://image.tmdb.org/t/p/w185{poster_path}"
+            
     
 
 if __name__ == "__main__":
