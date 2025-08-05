@@ -3,7 +3,7 @@ from rest_framework.response import Response
 from rest_framework.permissions import IsAuthenticated, AllowAny
 from rest_framework import status
 from services.tmdb_api_client import TMDBApiClient
-from .serializers import MovieSerializer, TVSeriesSerializer, MovieDetailSerializer
+from .serializers import MovieSerializer, TVSeriesSerializer, MovieDetailSerializer, TVDetailSerializer
 
 
 class TrendingMoviesAPIView(APIView):
@@ -84,6 +84,26 @@ class MovieDetailAPIView(APIView):
                 status=status.HTTP_500_INTERNAL_SERVER_ERROR
             )
 
+class TVDetailAPIView(APIView):
+    """Get detailed information for a specific tv series."""
+    permission_classes = [IsAuthenticated]
+    
+    def get(self, request, tmdb_id):
+        try:
+            client = TMDBApiClient()
+            series_data = client.get_series(tmdb_id)
+            series_data["media_type"] = "series"
+            serializer = TVDetailSerializer(series_data)
+            
+            return Response(serializer.data, status=status.HTTP_200_OK)
+            
+            return Response(serializer.data, status=status.HTTP_200_OK)
+            
+        except Exception as e:
+            return Response(
+                {'error': f'Failed to fetch series details: {str(e)}'}, 
+                status=status.HTTP_500_INTERNAL_SERVER_ERROR
+            )
 
 class MovieRecommendationsAPIView(APIView):
     """Get movie recommendations based on a specific movie."""

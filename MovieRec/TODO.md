@@ -187,7 +187,7 @@
 1. **Movie Endpoints Creation** - Core movie API endpoints
 
    - [x] Create movies app structure
-   - [ ] Trending movies endpoint (GET /api/movies/trending/)
+   - [x] Trending movies endpoint (GET /api/movies/trending/)
    - [ ] Movie search endpoint (GET /api/movies/search/)
    - [ ] Movie details endpoint (GET /api/movies/{id}/)
    - [ ] Movie recommendations endpoint (GET /api/movies/{id}/recommendations/)
