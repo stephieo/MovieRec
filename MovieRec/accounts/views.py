@@ -24,6 +24,7 @@ class RegisterAPIView(generics.CreateAPIView):
     serializer_class = UserRegistrationSerializer
     permission_classes = [AllowAny]
 
+
 class LoginAPIView(generics.CreateAPIView):
     serializer_class = UserLoginSerializer
     permission_classes = [AllowAny]
@@ -46,12 +47,15 @@ class LoginAPIView(generics.CreateAPIView):
                 )
             return Response({'error': 'Invalid credentials'}, status=status.HTTP_401_UNAUTHORIZED)
 
+
 class UserAPIView(generics.RetrieveAPIView):
     serializer_class = UserProfileSerializer
     permission_classes = [IsAuthenticated]
 
     def get_object(self):
         return self.request.user
+
+
 class UserFavoritesListAPIView(generics.ListAPIView):
     # FUTURE: would be nice to categorize faves into movie and tv
     serializer_class = FavoritesSerializer
@@ -101,9 +105,10 @@ class UserFavoritesDeleteAPIView(generics.DestroyAPIView):
         return Favorites.objects.filter(user=self.request.user)
     
     def destroy(self, request, *args, **kwargs):
-        instance = self.get_object()
-        self.perform_destroy(instance)
+        favorite = self.get_object()
+        item_name = favorite.item_name
+        self.perform_destroy(favorite)
         return Response(
-            {'message': 'Favorite removed successfully'}, 
+            {'message': f'Favorite "{item_name}" removed successfully'}, 
             status=status.HTTP_200_OK
         )

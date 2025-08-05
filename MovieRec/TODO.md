@@ -186,7 +186,7 @@
 
 1. **Movie Endpoints Creation** - Core movie API endpoints
 
-   - [ ] Create movies app structure
+   - [x] Create movies app structure
    - [ ] Trending movies endpoint (GET /api/movies/trending/)
    - [ ] Movie search endpoint (GET /api/movies/search/)
    - [ ] Movie details endpoint (GET /api/movies/{id}/)
@@ -198,7 +198,7 @@
    - [ ] Cache movie details (24 hour TTL)
    - [ ] Cache search results (30 min TTL)
 
-**MEDIUM PRIORITY (If Time Allows):** 3. **API Documentation** - Update Swagger docs for movie endpoints 4. **URL Configuration** - Ensure all endpoints are properly routed 5. **Error Handling** - Proper error responses for movie endpoints
+**MEDIUM PRIORITY (As much as Time Allows):** 3. **API Documentation** - Make Swagger docs more detailed for endpoints 4. **URL Configuration** - Ensure all endpoints are properly routed 5. **Error Handling** - Proper error responses for movie endpoints
 
 **LOW PRIORITY (Future Sprint):** 6. **Testing** - Basic endpoint tests 7. **Advanced Features** - Filtering, pagination, etc.
 
