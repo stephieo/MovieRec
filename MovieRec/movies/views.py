@@ -3,7 +3,7 @@ from rest_framework.response import Response
 from rest_framework.permissions import IsAuthenticated, AllowAny
 from rest_framework import status
 from services.tmdb_api_client import TMDBApiClient
-from .serializers import MovieSerializer, TVSeriesSerializer
+from .serializers import MovieSerializer, TVSeriesSerializer, MovieDetailSerializer
 
 
 class TrendingMoviesAPIView(APIView):
@@ -45,9 +45,16 @@ class TrendingTVAPIView(APIView):
             client = TMDBApiClient()
             trending_data = client.get_trending_series()
             
-            # For TV series, we need a different serializer (they use 'name' instead of 'title')
-            # For now, let's just return the raw data
-            return Response(trending_data, status=status.HTTP_200_OK)
+            tv_series = trending_data.get('results', [])
+            serializer = TVSeriesSerializer(tv_series, many=True)
+            response_data = {
+                'page': trending_data.get('page', 1),
+                'results': serializer.data,
+                'total_pages': trending_data.get('total_pages', 1),
+                'total_results': trending_data.get('total_results', 0)
+            }
+
+            return Response(response_data, status=status.HTTP_200_OK)
             
         except Exception as e:
             return Response(
@@ -60,12 +67,16 @@ class MovieDetailAPIView(APIView):
     """Get detailed information for a specific movie."""
     permission_classes = [IsAuthenticated]
     
-    def get(self, request, movie_id):
+    def get(self, request, tmdb_id):
         try:
             client = TMDBApiClient()
-            movie_data = client.get_movie(movie_id)
+            movie_data = client.get_movie(tmdb_id)
+            movie_data["media_type"] = "movie"
+            serializer = MovieDetailSerializer(movie_data)
             
-            return Response(movie_data, status=status.HTTP_200_OK)
+            return Response(serializer.data, status=status.HTTP_200_OK)
+            
+            return Response(serializer.data, status=status.HTTP_200_OK)
             
         except Exception as e:
             return Response(
@@ -74,22 +85,38 @@ class MovieDetailAPIView(APIView):
             )
 
 
-# class MovieRecommendationsAPIView(APIView):
-#     """Get movie recommendations based on a specific movie."""
-#     permission_classes = [IsAuthenticated]
+class MovieRecommendationsAPIView(APIView):
+    """Get movie recommendations based on a specific movie."""
+    permission_classes = [IsAuthenticated]
     
-#     def get(self, request, movie_id):
-#         try:
-#             client = TMDBApiClient()
-#             recommendations_data = client.get_movie_recommendations(movie_id)
+    def get(self, request, tmdb_id):
+        try:
+            client = TMDBApiClient()
+            recommendations_data = client.get_movie_recommendations(tmdb_id)
             
-#             return Response(recommendations_data, status=status.HTTP_200_OK)
+            # Serialize the recommendations data for consistency
+            movies = recommendations_data.get('results', [])
+            # Add media_type to each movie for serializer compatibility
+            for movie in movies:
+                movie["media_type"] = "movie"
             
-#         except Exception as e:
-#             return Response(
-#                 {'error': f'Failed to fetch movie recommendations: {str(e)}'}, 
-#                 status=status.HTTP_500_INTERNAL_SERVER_ERROR
-#             )
+            serializer = MovieSerializer(movies, many=True)
+            
+            # Return structured response like other endpoints
+            response_data = {
+                'page': recommendations_data.get('page', 1),
+                'results': serializer.data,
+                'total_pages': recommendations_data.get('total_pages', 1),
+                'total_results': recommendations_data.get('total_results', 0)
+            }
+            
+            return Response(response_data, status=status.HTTP_200_OK)
+            
+        except Exception as e:
+            return Response(
+                {'error': f'Failed to fetch movie recommendations: {str(e)}'}, 
+                status=status.HTTP_500_INTERNAL_SERVER_ERROR
+            )
 
 
 # class MovieSearchAPIView(APIView):

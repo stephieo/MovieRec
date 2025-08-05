@@ -235,11 +235,11 @@ class TMDBApiClient:
         response.raise_for_status()  # Raise an error for bad responses
         return response.json()
 
-    def get_poster_url(self, poster_path: int) -> str:
-        """Generate full poster URL by fetching details from TMDB API.
+    def get_poster_url(self, poster_path: str) -> str:
+        """Generate full poster URL from TMDB poster path.
         
         Args:
-            tmdb_id (int): The TMDB ID for the movie or TV series.
+            poster_path (str): The poster path from TMDB API response (e.g., '/path/to/poster.jpg').
             
         Returns:
             str: Complete URL to the poster image or placeholder if no image.

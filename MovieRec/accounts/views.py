@@ -75,7 +75,7 @@ class UserFavoritesCreateAPIView(generics.CreateAPIView):
         """
         client = TMDBApiClient()
         tmdb_id = serializer.validated_data.get('tmdb_id')
-        item_type = serializer.validated_data.get('type')
+        item_type = serializer.validated_data.get('media_type')
         
         if item_type == "movie":
             item_details = client.get_movie(tmdb_id)
