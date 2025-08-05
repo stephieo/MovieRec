@@ -4,6 +4,13 @@ from rest_framework.permissions import IsAuthenticated, AllowAny
 from rest_framework import status
 from services.tmdb_api_client import TMDBApiClient
 from .serializers import MovieSerializer, TVSeriesSerializer, MovieDetailSerializer, TVDetailSerializer
+from drf_yasg.utils import swagger_auto_schema
+from drf_yasg import openapi
+
+# Swagger query parameters for search endpoints
+QUERY_PARAM = openapi.Parameter('query', openapi.IN_QUERY, description="Search query", type=openapi.TYPE_STRING, required=True)
+YEAR_PARAM = openapi.Parameter('year', openapi.IN_QUERY, description="Release/air date year (optional)", type=openapi.TYPE_STRING, required=False)
+ADULT_PARAM = openapi.Parameter('include_adult', openapi.IN_QUERY, description="Include adult content (default: false)", type=openapi.TYPE_BOOLEAN, required=False, default=False)
 
 
 class TrendingMoviesAPIView(APIView):
@@ -66,10 +73,11 @@ class SearchMoviesAPIView(APIView):
     """search for a movie with query"""
     permission_classes = [IsAuthenticated]
     
+    @swagger_auto_schema(manual_parameters=[QUERY_PARAM, YEAR_PARAM, ADULT_PARAM])
     def get(self, request):
         try:
             client = TMDBApiClient()
-            # Get query parameters
+
             query = request.query_params.get('query')
             if not query:
                 return Response(
@@ -77,17 +85,18 @@ class SearchMoviesAPIView(APIView):
                     status=status.HTTP_400_BAD_REQUEST
                 )
             
-            # Build search parameters
             search_params = {
                 'query': query,
                 'primary_release_year': request.query_params.get('year', ''),
-                'language': request.query_params.get('language', 'en-US'),
                 'include_adult': request.query_params.get('include_adult', 'false').lower() == 'true'
             }
             search_results = client.search_movies(search_params)
             
             # abridge the results from TMDB with serializer
             movies = search_results.get('results', [])
+            # Adding media_type to each result for serializer compatibility
+            for show in movies:
+                show["media_type"] = "movies"
             serializer = MovieSerializer(movies, many=True)
             
             # full response structure
@@ -110,6 +119,7 @@ class SearchTVAPIView(APIView):
     """search for a tv series with query"""
     permission_classes = [IsAuthenticated]
     
+    @swagger_auto_schema(manual_parameters=[QUERY_PARAM, YEAR_PARAM, ADULT_PARAM])
     def get(self, request):
         try:
             client = TMDBApiClient()
@@ -121,11 +131,9 @@ class SearchTVAPIView(APIView):
                     status=status.HTTP_400_BAD_REQUEST
                 )
             
-            # Build search parameters
             search_params = {
                 'query': query,
                 'first_air_date_year': request.query_params.get('year', ''),
-                'language': request.query_params.get('language', 'en-US'),
                 'include_adult': request.query_params.get('include_adult', 'false').lower() == 'true'
             }
 
@@ -133,6 +141,10 @@ class SearchTVAPIView(APIView):
             
             # abridge the results from TMDB with serializer
             series = search_results.get('results', [])
+           
+            # Adding media_type to each result for serializer compatibility
+            for show in series:
+                show["media_type"] = "tv"
             serializer = TVSeriesSerializer(series, many=True)
             
             # full response structure
@@ -165,8 +177,6 @@ class MovieDetailAPIView(APIView):
             
             return Response(serializer.data, status=status.HTTP_200_OK)
             
-            return Response(serializer.data, status=status.HTTP_200_OK)
-            
         except Exception as e:
             return Response(
                 {'error': f'Failed to fetch movie details: {str(e)}'}, 
@@ -183,8 +193,6 @@ class TVDetailAPIView(APIView):
             series_data = client.get_series(tmdb_id)
             series_data["media_type"] = "series"
             serializer = TVDetailSerializer(series_data)
-            
-            return Response(serializer.data, status=status.HTTP_200_OK)
             
             return Response(serializer.data, status=status.HTTP_200_OK)
             
