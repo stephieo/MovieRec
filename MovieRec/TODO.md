@@ -189,7 +189,7 @@
    - [x] Create movies app structure
    - [x] Trending movies endpoint (GET /api/movies/trending/)
    - [ ] Movie search endpoint (GET /api/movies/search/)
-   - [ ] Movie details endpoint (GET /api/movies/{id}/)
+   - [x] Movie details endpoint (GET /api/movies/{id}/)
    - [ ] Movie recommendations endpoint (GET /api/movies/{id}/recommendations/)
 
 2. **Basic Caching Implementation** - Redis caching for TMDB API calls

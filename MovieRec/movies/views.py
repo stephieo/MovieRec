@@ -62,6 +62,95 @@ class TrendingTVAPIView(APIView):
                 status=status.HTTP_500_INTERNAL_SERVER_ERROR
             )
 
+class SearchMoviesAPIView(APIView):
+    """search for a movie with query"""
+    permission_classes = [IsAuthenticated]
+    
+    def get(self, request):
+        try:
+            client = TMDBApiClient()
+            # Get query parameters
+            query = request.query_params.get('query')
+            if not query:
+                return Response(
+                    {'error': 'Query parameter is required'}, 
+                    status=status.HTTP_400_BAD_REQUEST
+                )
+            
+            # Build search parameters
+            search_params = {
+                'query': query,
+                'primary_release_year': request.query_params.get('year', ''),
+                'language': request.query_params.get('language', 'en-US'),
+                'include_adult': request.query_params.get('include_adult', 'false').lower() == 'true'
+            }
+            search_results = client.search_movies(search_params)
+            
+            # abridge the results from TMDB with serializer
+            movies = search_results.get('results', [])
+            serializer = MovieSerializer(movies, many=True)
+            
+            # full response structure
+            response_data = {
+                'page': search_results.get('page', 1),
+                'results': serializer.data,
+                'total_pages': search_results.get('total_pages', 1),
+                'total_results': search_results.get('total_results', 0)
+            }
+            
+            return Response(response_data, status=status.HTTP_200_OK)
+            
+        except Exception as e:
+            return Response(
+                {'error': f'Failed to fetch movies search results: {str(e)}'}, 
+                status=status.HTTP_500_INTERNAL_SERVER_ERROR
+            )
+
+class SearchTVAPIView(APIView):
+    """search for a tv series with query"""
+    permission_classes = [IsAuthenticated]
+    
+    def get(self, request):
+        try:
+            client = TMDBApiClient()
+            # Get query parameters
+            query = request.query_params.get('query')
+            if not query:
+                return Response(
+                    {'error': 'Query parameter is required'}, 
+                    status=status.HTTP_400_BAD_REQUEST
+                )
+            
+            # Build search parameters
+            search_params = {
+                'query': query,
+                'first_air_date_year': request.query_params.get('year', ''),
+                'language': request.query_params.get('language', 'en-US'),
+                'include_adult': request.query_params.get('include_adult', 'false').lower() == 'true'
+            }
+
+            search_results = client.search_series(search_params)
+            
+            # abridge the results from TMDB with serializer
+            series = search_results.get('results', [])
+            serializer = TVSeriesSerializer(series, many=True)
+            
+            # full response structure
+            response_data = {
+                'page': search_results.get('page', 1),
+                'results': serializer.data,
+                'total_pages': search_results.get('total_pages', 1),
+                'total_results': search_results.get('total_results', 0)
+            }
+            
+            return Response(response_data, status=status.HTTP_200_OK)
+            
+        except Exception as e:
+            return Response(
+                {'error': f'Failed to fetch tv search results: {str(e)}'}, 
+                status=status.HTTP_500_INTERNAL_SERVER_ERROR
+            )
+
 
 class MovieDetailAPIView(APIView):
     """Get detailed information for a specific movie."""
@@ -145,21 +234,6 @@ class MovieRecommendationsAPIView(APIView):
     
 #     def get(self, request):
 #         try:
-#             # Get query parameters
-#             query = request.query_params.get('query')
-#             if not query:
-#                 return Response(
-#                     {'error': 'Query parameter is required'}, 
-#                     status=status.HTTP_400_BAD_REQUEST
-#                 )
-            
-#             # Build search parameters
-#             search_params = {
-#                 'query': query,
-#                 'primary_release_year': request.query_params.get('year', ''),
-#                 'language': request.query_params.get('language', 'en-US'),
-#                 'include_adult': request.query_params.get('include_adult', 'false').lower() == 'true'
-#             }
             
 #             client = TMDBApiClient()
 #             search_data = client.search_movies(search_params)
