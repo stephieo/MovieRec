@@ -1,6 +1,6 @@
 from .models import Favorites, User
 from .serializers import FavoritesSerializer, UserRegistrationSerializer, UserLoginSerializer, UserProfileSerializer
-from rest_framework.decorators import api_view
+# from rest_framework.decorators import api_view
 from rest_framework.response import Response
 from rest_framework.views import APIView
 from rest_framework.permissions import IsAuthenticated, AllowAny
