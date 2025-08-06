@@ -8,7 +8,7 @@ services:
       - db
       - redis
     volumes:
-      - .:/MovieRec # this syncs changes in the local directory to the container
+      - .:/MovieRec # sync changes in the local directory to the container
 
   db:
     image: postgres:17
