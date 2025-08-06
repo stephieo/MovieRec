@@ -61,14 +61,14 @@
 
 ### Movie Management (movies app) - 🚀 SPRINT FOCUS
 
-- [ ] Create movies app (`python manage.py startapp movies`)
-- [ ] Create movie API views using TMDB client
-  - [ ] TrendingMoviesAPIView
-  - [ ] MovieSearchAPIView
-  - [ ] MovieDetailAPIView
-  - [ ] MovieRecommendationsAPIView
-- [ ] Configure movie app URLs
-- [ ] Add movie endpoints to main URLs
+- [x] Create movies app (`python manage.py startapp movies`)
+- [x] Create movie API views using TMDB client
+  - [x] TrendingMoviesAPIView
+  - [x] MovieSearchAPIView
+  - [x] MovieDetailAPIView
+  - [x] MovieRecommendationsAPIView
+- [x] Configure movie app URLs
+- [x] Add movie endpoints to main URLs
 - #FUTURE[ ] Implement movie search and filtering
 - #FUTURE[ ] Add genre-based filtering
 - #FUTURE[ ] Create movie recommendation algorithm
@@ -78,7 +78,13 @@
 
 ### Movie Data
 
-- [ ] Integrate with external movie API (TMDB) - [x] trending weekly movies and series - [x] movie and series search - [x] query parameter support - [x] specific movie - [x] request error handling - [ ]item id input validation ( API level?)
+- [x] Integrate with external movie API (TMDB)
+ - [x] trending weekly movies and series
+  - [x] movie and series search
+   - [x] query parameter support
+    - [x] specific movie
+     - [x] request error handling 
+     - [ ]item id input validation ( API level?)
       -#FUTURE: [ ] recommendation filtering
       -#FUTURE: [ ] Add movie poster/image handling?
 
@@ -99,7 +105,7 @@
 ### DRF & Swagger Setup
 
 - [x] Configure drf-yasg for API documentation
-- [ ] Add proper API endpoint descriptions
+- [x] Add proper API endpoint descriptions
 - [ ] Create API usage examples
 - [ ] Add authentication documentation
 - [x] Test all API endpoints with Swagger UI
@@ -188,9 +194,9 @@
 
    - [x] Create movies app structure
    - [x] Trending movies endpoint (GET /api/movies/trending/)
-   - [ ] Movie search endpoint (GET /api/movies/search/)
+   - [x] Movie search endpoint (GET /api/movies/search/)
    - [x] Movie details endpoint (GET /api/movies/{id}/)
-   - [ ] Movie recommendations endpoint (GET /api/movies/{id}/recommendations/)
+   - [x] Movie recommendations endpoint (GET /api/movies/{id}/recommendations/)
 
 2. **Basic Caching Implementation** - Redis caching for TMDB API calls
    - [ ] Set up Redis caching for TMDB API responses

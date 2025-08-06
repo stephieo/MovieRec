@@ -14,7 +14,12 @@ ADULT_PARAM = openapi.Parameter('include_adult', openapi.IN_QUERY, description="
 
 
 class TrendingMoviesAPIView(APIView):
-    """Get trending movies (weekly)."""
+    """
+    Get trending movies for the current week.
+    
+    Returns a paginated list of trending movies from TMDB with additional metadata
+    including page information, total results, and total pages.
+    """
     permission_classes = [IsAuthenticated]
     
     def get(self, request):
@@ -44,7 +49,12 @@ class TrendingMoviesAPIView(APIView):
 
 
 class TrendingTVAPIView(APIView):
-    """Get weekly trending TV series from TMDB API."""
+    """
+    Get trending TV series for the current week.
+    
+    Returns a paginated list of trending TV series from TMDB with additional metadata
+    including page information, total results, and total pages.
+    """
     permission_classes = [IsAuthenticated]
     
     def get(self, request):
@@ -69,8 +79,19 @@ class TrendingTVAPIView(APIView):
                 status=status.HTTP_500_INTERNAL_SERVER_ERROR
             )
 
+
 class SearchMoviesAPIView(APIView):
-    """search for a movie with query"""
+    """
+    Search for movies using a text query.
+    
+    Allows searching for movies by title with optional filters for release year
+    and adult content inclusion. Returns paginated results matching the search criteria.
+    
+    Query Parameters:
+    - query (required): Search term for movie titles
+    - year (optional): Filter by primary release year
+    - include_adult (optional): Include adult content (default: false)
+    """
     permission_classes = [IsAuthenticated]
     
     @swagger_auto_schema(manual_parameters=[QUERY_PARAM, YEAR_PARAM, ADULT_PARAM])
@@ -95,8 +116,8 @@ class SearchMoviesAPIView(APIView):
             # abridge the results from TMDB with serializer
             movies = search_results.get('results', [])
             # Adding media_type to each result for serializer compatibility
-            for show in movies:
-                show["media_type"] = "movies"
+            for movie in movies:
+                movie["media_type"] = "movie"
             serializer = MovieSerializer(movies, many=True)
             
             # full response structure
@@ -115,8 +136,19 @@ class SearchMoviesAPIView(APIView):
                 status=status.HTTP_500_INTERNAL_SERVER_ERROR
             )
 
+
 class SearchTVAPIView(APIView):
-    """search for a tv series with query"""
+    """
+    Search for TV series using a text query.
+    
+    Allows searching for TV series by title with optional filters for first air date year
+    and adult content inclusion. Returns paginated results matching the search criteria.
+    
+    Query Parameters:
+    - query (required): Search term for TV series titles
+    - year (optional): Filter by first air date year
+    - include_adult (optional): Include adult content (default: false)
+    """
     permission_classes = [IsAuthenticated]
     
     @swagger_auto_schema(manual_parameters=[QUERY_PARAM, YEAR_PARAM, ADULT_PARAM])
@@ -165,7 +197,15 @@ class SearchTVAPIView(APIView):
 
 
 class MovieDetailAPIView(APIView):
-    """Get detailed information for a specific movie."""
+    """
+    Get detailed information for a specific movie.
+    
+    Retrieves comprehensive movie details including plot, cast, crew, ratings,
+    budget, revenue, runtime, and other metadata from TMDB.
+    
+    Path Parameters:
+    - tmdb_id: The TMDB movie ID
+    """
     permission_classes = [IsAuthenticated]
     
     def get(self, request, tmdb_id):
@@ -184,14 +224,22 @@ class MovieDetailAPIView(APIView):
             )
 
 class TVDetailAPIView(APIView):
-    """Get detailed information for a specific tv series."""
+    """
+    Get detailed information for a specific TV series.
+    
+    Retrieves comprehensive TV series details including plot, cast, crew, ratings,
+    episode information, seasons, and other metadata from TMDB.
+    
+    Path Parameters:
+    - tmdb_id: The TMDB TV series ID
+    """
     permission_classes = [IsAuthenticated]
     
     def get(self, request, tmdb_id):
         try:
             client = TMDBApiClient()
             series_data = client.get_series(tmdb_id)
-            series_data["media_type"] = "series"
+            series_data["media_type"] = "tv"
             serializer = TVDetailSerializer(series_data)
             
             return Response(serializer.data, status=status.HTTP_200_OK)
@@ -203,7 +251,16 @@ class TVDetailAPIView(APIView):
             )
 
 class MovieRecommendationsAPIView(APIView):
-    """Get movie recommendations based on a specific movie."""
+    """
+    Get movie recommendations based on a specific movie.
+    
+    Returns a paginated list of movies similar to the specified movie,
+    based on TMDB's recommendation algorithm which considers genres,
+    keywords, cast, and user viewing patterns.
+    
+    Path Parameters:
+    - tmdb_id: The TMDB movie ID to base recommendations on
+    """
     permission_classes = [IsAuthenticated]
     
     def get(self, request, tmdb_id):
@@ -235,21 +292,46 @@ class MovieRecommendationsAPIView(APIView):
                 status=status.HTTP_500_INTERNAL_SERVER_ERROR
             )
 
-
-# class MovieSearchAPIView(APIView):
-#     """Search for movies using query parameters."""
-#     permission_classes = [AllowAny]
+class TVRecommendationsAPIView(APIView):
+    """
+    Get TV series recommendations based on a specific TV series.
     
-#     def get(self, request):
-#         try:
+    Returns a paginated list of TV series similar to the specified series,
+    based on TMDB's recommendation algorithm which considers genres,
+    keywords, cast, and user viewing patterns.
+    
+    Path Parameters:
+    - tmdb_id: The TMDB TV series ID to base recommendations on
+    """
+    permission_classes = [IsAuthenticated]
+    
+    def get(self, request, tmdb_id):
+        try:
+            client = TMDBApiClient()
+            recommendations_data = client.get_series_recommendations(tmdb_id)
             
-#             client = TMDBApiClient()
-#             search_data = client.search_movies(search_params)
+            # Serialize the recommendations data for consistency
+            series = recommendations_data.get('results', [])
+            # Add media_type to each serie for serializer compatibility
+            for serie in series:
+                serie["media_type"] = "tv"
             
-#             return Response(search_data, status=status.HTTP_200_OK)
+            serializer = TVSeriesSerializer(series, many=True)
             
-#         except Exception as e:
-#             return Response(
-#                 {'error': f'Failed to search movies: {str(e)}'}, 
-#                 status=status.HTTP_500_INTERNAL_SERVER_ERROR
-#             )
+            # Return structured response like other endpoints
+            response_data = {
+                'page': recommendations_data.get('page', 1),
+                'results': serializer.data,
+                'total_pages': recommendations_data.get('total_pages', 1),
+                'total_results': recommendations_data.get('total_results', 0)
+            }
+            
+            return Response(response_data, status=status.HTTP_200_OK)
+            
+        except Exception as e:
+            return Response(
+                {'error': f'Failed to fetch tv recommendations: {str(e)}'}, 
+                status=status.HTTP_500_INTERNAL_SERVER_ERROR
+            )
+        
+    

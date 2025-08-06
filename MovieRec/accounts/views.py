@@ -20,12 +20,36 @@ from  services.tmdb_api_client import TMDBApiClient
 
 
 class RegisterAPIView(generics.CreateAPIView):
+    """
+    Register a new user account.
+    
+    Creates a new user account with the provided credentials. The user will be able
+    to log in and manage their movie/TV series favorites after successful registration.
+    
+    Request Body:
+    - username: Unique username for the account
+    - email: User's email address
+    - password: Password for the account
+    - first_name: User's first name (optional)
+    - last_name: User's last name (optional)
+    """
     queryset = User.objects.all()
     serializer_class = UserRegistrationSerializer
     permission_classes = [AllowAny]
 
 
 class LoginAPIView(generics.CreateAPIView):
+    """
+    Authenticate user credentials and log in.
+    
+    Validates the provided username and password combination. Upon successful
+    authentication, returns a success message. JWT tokens will be implemented
+    in future versions for session management.
+    
+    Request Body:
+    - username: The user's username
+    - password: The user's password
+    """
     serializer_class = UserLoginSerializer
     permission_classes = [AllowAny]
 
@@ -49,6 +73,14 @@ class LoginAPIView(generics.CreateAPIView):
 
 
 class UserAPIView(generics.RetrieveAPIView):
+    """
+    Get current user's profile information.
+    
+    Returns the authenticated user's profile details including username,
+    email, first name, last name, and last login timestamp.
+    
+    Authentication required.
+    """
     serializer_class = UserProfileSerializer
     permission_classes = [IsAuthenticated]
 
@@ -57,6 +89,15 @@ class UserAPIView(generics.RetrieveAPIView):
 
 
 class UserFavoritesListAPIView(generics.ListAPIView):
+    """
+    Get the current user's favorite movies and TV series.
+    
+    Returns a list of all movies and TV series that the authenticated user has
+    marked as favorites. Each favorite includes the TMDB ID, item name, poster URL,
+    and the date it was added to favorites.
+    
+    Authentication required.
+    """
     # FUTURE: would be nice to categorize faves into movie and tv
     serializer_class = FavoritesSerializer
     permission_classes = [IsAuthenticated]
@@ -66,6 +107,19 @@ class UserFavoritesListAPIView(generics.ListAPIView):
         return Favorites.objects.filter(user=self.request.user)
 
 class UserFavoritesCreateAPIView(generics.CreateAPIView):
+    """
+    Add a movie or TV series to the user's favorites.
+    
+    Adds the specified movie or TV series to the authenticated user's favorites list.
+    The system automatically fetches additional details (title, poster URL) from TMDB
+    and associates the favorite with the current user.
+    
+    Request Body:
+    - tmdb_id: The TMDB ID of the movie or TV series
+    - media_type: Either "movie" or "tv" to specify the content type
+    
+    Authentication required.
+    """
     serializer_class = FavoritesSerializer
     permission_classes = [IsAuthenticated]
     
@@ -96,6 +150,17 @@ class UserFavoritesCreateAPIView(generics.CreateAPIView):
         )
 
 class UserFavoritesDeleteAPIView(generics.DestroyAPIView):
+    """
+    Remove a movie or TV series from the user's favorites.
+    
+    Removes the specified movie or TV series from the authenticated user's favorites
+    list using the TMDB ID. Only the user who added the favorite can remove it.
+    
+    Path Parameters:
+    - tmdb_id: The TMDB ID of the favorite to remove
+    
+    Authentication required.
+    """
     serializer_class = FavoritesSerializer
     permission_classes = [IsAuthenticated]
     lookup_field = 'tmdb_id'  # Use tmdb_id instead of pk for lookup
