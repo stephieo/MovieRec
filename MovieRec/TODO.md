@@ -71,7 +71,7 @@
 - [x] Add movie endpoints to main URLs
 - #FUTURE[ ] Implement movie search and filtering
 - #FUTURE[ ] Add genre-based filtering
-- #FUTURE[ ] Create movie recommendation algorithm
+- #FUTURE[ ] Create custom movie recommendation algorithm
 - #FUTURE[ ] Add movie rating system
 - #FUTURE[ ] Implement user watchlist functionality
 - #FUTURE[ ] Add movie reviews and comments
@@ -79,22 +79,22 @@
 ### Movie Data
 
 - [x] Integrate with external movie API (TMDB)
- - [x] trending weekly movies and series
+  - [x] trending weekly movies and series
   - [x] movie and series search
-   - [x] query parameter support
-    - [x] specific movie
-     - [x] request error handling 
+  - [x] query parameter support
+  - [x] specific movie
+  - [x] request error handling 
      - [ ]item id input validation ( API level?)
       -#FUTURE: [ ] recommendation filtering
-      -#FUTURE: [ ] Add movie poster/image handling?
+  - [x] Add movie poster/image handling
 
 ### Caching & Performance - 🚀 SPRINT FOCUS
 
 - [ ] Implement Redis caching for TMDB API calls
-  - [ ] Cache trending movies (1 hour TTL)
-  - [ ] Cache movie details (24 hour TTL)
-  - [ ] Cache search results (30 min TTL)
-  - [ ] Cache recommendations (2 hour TTL)
+  - [x] Cache trending movies (24 hour TTL)
+  - [x] Cache movie details (2 days TTL)
+  - [x] Cache search results (30 min TTL)
+  - [x] Cache recommendations (2 hour TTL)
 - [ ] Test Redis connection and caching
 - #FUTURE[ ] Cache popular movies and genres
 - #FUTURE[ ] Add database query optimization
