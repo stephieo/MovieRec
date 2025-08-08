@@ -196,24 +196,31 @@ ON accounts_user(email);
 
 ### Redis Configuration
 
-Redis is configured as the default caching backend in Django settings but **caching is not currently implemented** in the application views. The infrastructure is ready for future caching implementation.
+Redis is configured as the default caching backend in Django settings with caching implemented on most API endpoints using Django's `cache_page` decorator.
 
-### Current Status
 
-- Redis backend configured ✅
-- Cache decorators: **Not implemented**
-- Cache keys: **Not defined**
-- TTL strategies: **Not implemented**
 
-### Future Cache Structure (Not Implemented)
+### Cache Structure
 
-If caching were implemented, the structure would be:
+Django's `cache_page` generates keys in the format: `views.decorators.cache.cache_page.{key_prefix}.{url_hash}.{language}.{timezone}`
 
+**Implemented Cache Keys:**
 ```
-Potential Keys:
-- `views.decorators.cache.cache_page.{url_hash}` → Django's default cache_page keys
-- Custom keys would need to be implemented manually
+- `views.decorators.cache.cache_page.trending_movies.{hash}` → Trending Movies (24h TTL)
+- `views.decorators.cache.cache_page.trending_tv.{hash}` → Trending TV (24h TTL)
+- `views.decorators.cache.cache_page.search_movies.{hash}` → Movie search (1h TTL)
+- `views.decorators.cache.cache_page.search_tv.{hash}` → TV search (1h TTL)
+- `views.decorators.cache.cache_page.details_movie.{hash}` → Movie details (2d TTL)
+- `views.decorators.cache.cache_page.detail_tb.{hash}` → TV details (2d TTL)
+- `views.decorators.cache.cache_page.recommendations_movies.{hash}` → Movie recommendations (2h TTL)
+- `views.decorators.cache.cache_page.recommendations_tv.{hash}` → TV recommendations (2h TTL)
 ```
+
+### TTL Strategy (Implemented)
+- **Trending content**: 24 hours (daily updates for both movies and TV)
+- **Movie/TV details**: 2 days (metadata rarely changes)  
+- **Search results**: 1 hour (reasonable freshness)
+- **Recommendations**: 2 hours (balance between freshness and performance)
 
 ## Security Considerations
 
