@@ -20,13 +20,13 @@ RUN pip install --no-cache-dir -r requirements.txt
 
 COPY . .
 
-# Remove .env files from container 
-# (apparently Render doesn't need them and it's better for security)
-RUN rm -f .env .env.prod
-
 # download static files
 RUN mkdir -p staticfiles
 RUN python manage.py collectstatic --noinput
+
+# Remove .env files from container 
+# (apparently Render doesn't need them and it's better for security)
+RUN rm -f .env .env.prod
 
 EXPOSE 8000
 
