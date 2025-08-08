@@ -240,7 +240,7 @@ class TVDetailAPIView(APIView):
     """
     permission_classes = [IsAuthenticated]
     
-    @method_decorator(cache_page(60*60*24*2, key_prefix="detail_tb"))
+    @method_decorator(cache_page(60*60*24*2, key_prefix="detail_tv"))
     def get(self, request, tmdb_id):
         try:
             client = TMDBApiClient()
