@@ -109,12 +109,9 @@ CACHES = {
     "default": {
         "BACKEND": "django_redis.cache.RedisCache",
         "LOCATION": f"redis://{env('REDIS_HOST')}:{env('REDIS_PORT')}/{env('REDIS_DB')}",
-        "OPTIONS": {
+         "OPTIONS": {
             "CLIENT_CLASS": "django_redis.client.DefaultClient",
-        },
-        "KEY_PREFIX": "movierecv1",
-        "TIMEOUT": 300,  # Default timeout of 5 minutes
-
+        }
     }
 }
 

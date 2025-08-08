@@ -6,8 +6,6 @@ from services.tmdb_api_client import TMDBApiClient
 from .serializers import MovieSerializer, TVSeriesSerializer, MovieDetailSerializer, TVDetailSerializer
 from drf_yasg.utils import swagger_auto_schema
 from drf_yasg import openapi
-from django.utils.decorators import method_decorator
-from django.views.decorators.cache import cache_page
 
 # Swagger query parameters for search endpoints
 QUERY_PARAM = openapi.Parameter('query', openapi.IN_QUERY, description="Search query", type=openapi.TYPE_STRING, required=True)
@@ -23,7 +21,7 @@ class TrendingMoviesAPIView(APIView):
     including page information, total results, and total pages.
     """
     permission_classes = [IsAuthenticated]
-    @method_decorator(cache_page(60*60*24 ,key_prefix="trending_movies")) #cache the response of this method  for 1 day
+    
     def get(self, request):
         try:
             client = TMDBApiClient()
@@ -58,7 +56,7 @@ class TrendingTVAPIView(APIView):
     including page information, total results, and total pages.
     """
     permission_classes = [IsAuthenticated]
-    @method_decorator(cache_page(60*60*24, key_prefix="trending_tv")) #cache the response of this method  for 1 day    
+    
     def get(self, request):
         try:
             client = TMDBApiClient()
@@ -96,7 +94,6 @@ class SearchMoviesAPIView(APIView):
     """
     permission_classes = [IsAuthenticated]
     
-    @method_decorator(cache_page(60*60, key_prefix="search_movies")) #cache the response of this method  for 1 hour
     @swagger_auto_schema(manual_parameters=[QUERY_PARAM, YEAR_PARAM, ADULT_PARAM])
     def get(self, request):
         try:
@@ -154,7 +151,6 @@ class SearchTVAPIView(APIView):
     """
     permission_classes = [IsAuthenticated]
     
-    @method_decorator(cache_page(60*60, key_prefix="search_tv"))
     @swagger_auto_schema(manual_parameters=[QUERY_PARAM, YEAR_PARAM, ADULT_PARAM])
     def get(self, request):
         try:
@@ -212,7 +208,6 @@ class MovieDetailAPIView(APIView):
     """
     permission_classes = [IsAuthenticated]
     
-    @method_decorator(cache_page(60*60*24*2, key_prefix="details_movie"))
     def get(self, request, tmdb_id):
         try:
             client = TMDBApiClient()
@@ -240,7 +235,6 @@ class TVDetailAPIView(APIView):
     """
     permission_classes = [IsAuthenticated]
     
-    @method_decorator(cache_page(60*60*24*2, key_prefix="detail_tb"))
     def get(self, request, tmdb_id):
         try:
             client = TMDBApiClient()
@@ -269,7 +263,6 @@ class MovieRecommendationsAPIView(APIView):
     """
     permission_classes = [IsAuthenticated]
     
-    @method_decorator(cache_page(60*60*2, key_prefix="recommendations_movies"))
     def get(self, request, tmdb_id):
         try:
             client = TMDBApiClient()
@@ -310,9 +303,8 @@ class TVRecommendationsAPIView(APIView):
     Path Parameters:
     - tmdb_id: The TMDB TV series ID to base recommendations on
     """
-    permission_classes = [IsAuthenticated] 
+    permission_classes = [IsAuthenticated]
     
-    @method_decorator(cache_page(60*60*2, key_prefix="recommendations_tv"))
     def get(self, request, tmdb_id):
         try:
             client = TMDBApiClient()
