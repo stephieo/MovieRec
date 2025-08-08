@@ -21,8 +21,10 @@ BASE_DIR = Path(__file__).resolve().parent.parent
 # and also allows us to set default values for the settings
 env = environ.Env(DEBUG=(bool, False))
 
-# Allows Django to load the settings form the .env file  into the env object
-environ.Env.read_env(os.path.join(BASE_DIR, '.env'))
+# Load .env file if it exists ( production will use renders environment variables)
+env_file = os.path.join(BASE_DIR, '.env')
+if os.path.exists(env_file):
+    environ.Env.read_env(env_file)
 
 # Quick-start development settings - unsuitable for production
 # See https://docs.djangoproject.com/en/5.2/howto/deployment/checklist/
@@ -184,10 +186,12 @@ USE_TZ = True
 # https://docs.djangoproject.com/en/5.2/howto/static-files/
 
 # SETTINGS FOR SWAGGER STATIC FILES WITH WHITENOISE
-# Whitenoise allows us to serve static files directly from the Django app in production without needing a separate web server like Nginx or Apache.
+# Whitenoise allows to serve static files directly from the Django app in production without needing a separate web server like Nginx or Apache.
 STATIC_URL = 'static/'
-STATIC_ROOT = os.path.join(BASE_DIR, 'staticfiles')
-STATICFILES_STORAGE = 'whitenoise.storage.CompressedManifestStaticFilesStorage'
+
+if not DEBUG:
+    STATIC_ROOT = os.path.join(BASE_DIR, 'staticfiles')
+    STATICFILES_STORAGE = 'whitenoise.storage.CompressedManifestStaticFilesStorage'
 
 # Default primary key field type
 # https://docs.djangoproject.com/en/5.2/ref/settings/#default-auto-field
