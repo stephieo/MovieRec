@@ -112,15 +112,19 @@ class UserFavoritesListAPIView(generics.ListAPIView):
     def get(self, request, *args, **kwargs):
         #LEARN: making custom cache key cuz django does not based on user
         cache_key = f"user_favorites_{request.user.id}"
-        cached_response = cache.get(cache_key)
+        cached_data = cache.get(cache_key)
         
-        if cached_response is not None:
-            return cached_response
+        if cached_data is not None:
+            return Response(cached_data)
             
-        # Get fresh data and cache it
-        response = super().get(request, *args, **kwargs)
-        cache.set(cache_key, response, 600)  # 10 minutes
-        return response
+        # Get fresh data
+        queryset = self.get_queryset()
+        serializer = self.get_serializer(queryset, many=True)
+        
+        # Cache the serialized data
+        cache.set(cache_key, serializer.data, 600)  # 10 minutes
+        
+        return Response(serializer.data)
 
 class UserFavoritesCreateAPIView(generics.CreateAPIView):
     """
