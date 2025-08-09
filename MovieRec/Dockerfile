@@ -26,9 +26,9 @@ RUN python manage.py collectstatic --noinput
 
 # Remove .env files from container 
 # (apparently Render doesn't need them and it's better for security)
-RUN rm -f .env .env.prod
+RUN rm -f .env .env.dev
 
 EXPOSE 8000
 
 # using gunicorn for production environment
-CMD  ["gunicorn", "--bind", "0.0.0.0:8000", "core.wsgi:application"]
+CMD  ["gunicorn", "--bind", "0.0.0.0:10000", "core.wsgi:application"]
