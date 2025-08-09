@@ -6,6 +6,7 @@ from rest_framework.views import APIView
 from rest_framework.permissions import IsAuthenticated, AllowAny
 from rest_framework import status
 from rest_framework import generics
+from rest_framework.exceptions import ValidationError
 from django.contrib.auth import authenticate
 # from rest_framework_simplejwt.tokens import RefreshToken
 from drf_yasg.utils import swagger_auto_schema
@@ -123,18 +124,31 @@ class UserFavoritesCreateAPIView(generics.CreateAPIView):
     serializer_class = FavoritesSerializer
     permission_classes = [IsAuthenticated]
     
+    
     def perform_create(self, serializer):
         """Automatically associate the favorite with the current user 
            and fetch item details from TMDB.
         """
         client = TMDBApiClient()
         tmdb_id = serializer.validated_data.get('tmdb_id')
-        item_type = serializer.validated_data.get('media_type')
+        media_type = serializer.validated_data.get('media_type')
         
-        if item_type == "movie":
+        # Check if user already has this item in favorites
+        if Favorites.objects.filter(
+            user=self.requests.user,
+            tmdb_id=tmdb_id,
+            media_type=media_type
+        ).exists():
+            raise ValidationError({
+                'detail': f'You have already added this {media_type} to your favorites.',
+                'tmdb_id': tmdb_id,
+                'media_type': media_type
+            })
+        
+        if media_type == "movie":
             item_details = client.get_movie(tmdb_id)
             item_name = item_details.get("title")  
-        else:  # item_type == "tv"
+        else:  # media_type == "tv"
             item_details = client.get_series(tmdb_id)
             item_name = item_details.get("name")  
         
@@ -146,7 +160,8 @@ class UserFavoritesCreateAPIView(generics.CreateAPIView):
         serializer.save(
             user=self.request.user,
             item_name=item_name,
-            poster_url=poster_url
+            poster_url=poster_url,
+            media_type=media_type
         )
 
 class UserFavoritesDeleteAPIView(generics.DestroyAPIView):
