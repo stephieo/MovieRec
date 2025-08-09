@@ -1,6 +1,7 @@
 venv/
 .env
 .dockerenv
+.env.dev
 
 # Python
 __pycache__/

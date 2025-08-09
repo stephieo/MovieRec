@@ -24,6 +24,7 @@ from rest_framework_simplejwt.views import (
     TokenObtainPairView,
     TokenRefreshView,
 )
+from django.views.generic.base import RedirectView
 
 
 schema_view = get_schema_view(
@@ -45,11 +46,13 @@ schema_view = get_schema_view(
 
 
 urlpatterns = [
+    path('', RedirectView.as_view(url='api/docs/',permanent=False), name="swagger_redirect"),
     path('admin/', admin.site.urls),
-    path('swagger/', schema_view.with_ui('swagger', cache_timeout=0), name='schema-swagger-ui'),
-    path('redoc/', schema_view.with_ui('redoc', cache_timeout=0), name='schema-redoc'),
+    path('api/docs/', schema_view.with_ui('swagger', cache_timeout=0), name='schema-swagger-ui'),
+    path('api/docs/redoc/', schema_view.with_ui('redoc', cache_timeout=0), name='schema-redoc'),
     path('api/token/', TokenObtainPairView.as_view(), name='token_obtain_pair'),
     path('api/token/refresh/', TokenRefreshView.as_view(), name='token_refresh'),
     path('api/accounts/', include('accounts.urls')),
     path('api/movies/', include('movies.urls')),
 ]
+

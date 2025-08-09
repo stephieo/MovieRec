@@ -21,8 +21,10 @@ BASE_DIR = Path(__file__).resolve().parent.parent
 # and also allows us to set default values for the settings
 env = environ.Env(DEBUG=(bool, False))
 
-# Allows Django to load the settings form the .env file  into the env object
-environ.Env.read_env(os.path.join(BASE_DIR, '.env'))
+# Load .env file if it exists ( production will use renders environment variables)
+env_file = os.path.join(BASE_DIR, '.env')
+if os.path.exists(env_file):
+    environ.Env.read_env(env_file)
 
 # Quick-start development settings - unsuitable for production
 # See https://docs.djangoproject.com/en/5.2/howto/deployment/checklist/
@@ -33,7 +35,7 @@ SECRET_KEY = env('SECRET_KEY')
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = env('DEBUG')
 
-ALLOWED_HOSTS = []
+ALLOWED_HOSTS = ['.onrender.com', 'localhost', '127.0.0.1']
 
 
 # Application definition
@@ -60,6 +62,7 @@ AUTH_USER_MODEL = 'accounts.User'
 
 MIDDLEWARE = [
     'django.middleware.security.SecurityMiddleware',
+    "whitenoise.middleware.WhiteNoiseMiddleware",
     'django.contrib.sessions.middleware.SessionMiddleware',
     "corsheaders.middleware.CorsMiddleware",
     "django.middleware.common.CommonMiddleware",
@@ -108,8 +111,8 @@ DATABASES = {
 CACHES = {
     "default": {
         "BACKEND": "django_redis.cache.RedisCache",
-        "LOCATION": f"redis://{env('REDIS_HOST')}:{env('REDIS_PORT')}/{env('REDIS_DB')}",
-         "OPTIONS": {
+        "LOCATION": f"{env('REDIS_URL')}",
+        "OPTIONS": {
             "CLIENT_CLASS": "django_redis.client.DefaultClient",
         }
     }
@@ -179,7 +182,13 @@ USE_TZ = True
 # Static files (CSS, JavaScript, Images)
 # https://docs.djangoproject.com/en/5.2/howto/static-files/
 
+# SETTINGS FOR SWAGGER STATIC FILES WITH WHITENOISE
+# Whitenoise allows to serve static files directly from the Django app in production without needing a separate web server like Nginx or Apache.
 STATIC_URL = 'static/'
+STATIC_ROOT = os.path.join(BASE_DIR, 'staticfiles')
+
+if not DEBUG:
+    STATICFILES_STORAGE = 'whitenoise.storage.CompressedManifestStaticFilesStorage'
 
 # Default primary key field type
 # https://docs.djangoproject.com/en/5.2/ref/settings/#default-auto-field
@@ -188,3 +197,31 @@ DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
 
 # API keys
 TMDB_TOKEN = env('TMDB_API_TOKEN')
+
+
+# enabling detailed logging
+LOGGING = {
+    'version': 1,
+    'disable_existing_loggers': False,
+    'handlers': {
+        'console': {
+            'class': 'logging.StreamHandler',
+        },
+    },
+    'root': {
+        'handlers': ['console'],
+        'level': 'ERROR',
+    },
+    'loggers': {
+        'django': {
+            'handlers': ['console'],
+            'level': 'ERROR',
+            'propagate': False,
+        },
+        'accounts': {
+            'handlers': ['console'],
+            'level': 'DEBUG',
+            'propagate': False,
+        },
+    },
+}
