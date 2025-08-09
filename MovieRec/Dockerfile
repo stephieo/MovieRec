@@ -24,11 +24,14 @@ COPY . .
 RUN mkdir -p staticfiles
 RUN python manage.py collectstatic --noinput
 
+# Make migrations during build (for any model changes)
+RUN python manage.py makemigrations
+
 # Remove .env files from container 
 # (apparently Render doesn't need them and it's better for security)
 RUN rm -f .env .env.dev
 
 EXPOSE 8000
 
-# using gunicorn for production environment
-CMD  ["gunicorn", "--bind", "0.0.0.0:10000", "core.wsgi:application"]
+# Run migrations and start production server
+CMD ["sh", "-c", "python manage.py migrate && gunicorn --bind 0.0.0.0:10000  core.wsgi:application"]
