@@ -201,7 +201,7 @@
    - [x] Create docs/ folder with technical documentation ✅
      - [x] Requirements analysis document ✅
      - [x] Database design & ERD documentation ✅
-     - [ ] ERD diagram 
+   - [ ] ERD diagram 
    - [ ] Update README.md with:
      - [ ] Project overview and features
      - [ ] Installation & setup instructions

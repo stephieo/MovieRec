@@ -11,7 +11,9 @@ from django.contrib.auth import authenticate
 # from rest_framework_simplejwt.tokens import RefreshToken
 from drf_yasg.utils import swagger_auto_schema
 from  services.tmdb_api_client import TMDBApiClient
-
+from django.utils.decorators import method_decorator
+from django.views.decorators.cache import cache_page
+from django.core.cache import cache
 
 # Create your views here.
 
@@ -106,6 +108,19 @@ class UserFavoritesListAPIView(generics.ListAPIView):
     def get_queryset(self):
         """Return favorites for the authenticated user only."""
         return Favorites.objects.filter(user=self.request.user)
+    
+    def get(self, request, *args, **kwargs):
+        #LEARN: making custom cache key cuz django does not based on user
+        cache_key = f"user_favorites_{request.user.id}"
+        cached_response = cache.get(cache_key)
+        
+        if cached_response is not None:
+            return cached_response
+            
+        # Get fresh data and cache it
+        response = super().get(request, *args, **kwargs)
+        cache.set(cache_key, response, 600)  # 10 minutes
+        return response
 
 class UserFavoritesCreateAPIView(generics.CreateAPIView):
     """
@@ -135,7 +150,7 @@ class UserFavoritesCreateAPIView(generics.CreateAPIView):
         
         # Check if user already has this item in favorites
         if Favorites.objects.filter(
-            user=self.requests.user,
+            user=self.request.user,
             tmdb_id=tmdb_id,
             media_type=media_type
         ).exists():
@@ -163,6 +178,11 @@ class UserFavoritesCreateAPIView(generics.CreateAPIView):
             poster_url=poster_url,
             media_type=media_type
         )
+        
+        # cache invalidation on addition of new fave
+        cache_key = f"user_favorites_{self.request.user.id}"
+        cache.delete(cache_key)
+
 
 class UserFavoritesDeleteAPIView(generics.DestroyAPIView):
     """
@@ -188,6 +208,11 @@ class UserFavoritesDeleteAPIView(generics.DestroyAPIView):
         favorite = self.get_object()
         item_name = favorite.item_name
         self.perform_destroy(favorite)
+        
+        # cache invalidation when user removes a fave
+        cache_key = f"user_favorites_{self.request.user.id}"
+        cache.delete(cache_key)
+        
         return Response(
             {'message': f'Favorite "{item_name}" removed successfully'}, 
             status=status.HTTP_200_OK
