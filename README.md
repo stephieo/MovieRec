@@ -1,63 +1,91 @@
 # MovieRec
+
+A high-performance backend API for movie and TV series discovery, built with Django REST Framework and powered by The Movie Database (TMDB).
+
+## 🎬 Live Demo
+- **live Interactive API Documentation**: [https://movierec-6usy.onrender.com](https://movierec-6usy.onrender.com)
+
 ## Table of Contents
 - [Description](#description)
 - [Features](#features)
+- [Technologies Used](#technologies-used)
 - [Installation](#installation)
 - [Usage](#usage)
 - [Configuration](#configuration)
 - [API Documentation](#api-documentation)
+- [Project Documentation](#project-documentation)
 - [Examples](#examples)
-- [Contributing](#contributing)
-- [Testing](#testing)
-- [License](#license)
 - [Authors](#authors)
 
 
 ## Description
 
-MovieRec is an MVP high-performing backend for a movie recommendation app. It provides RESTful APIs for movie discovery, user authentication, and favorite movie management. The system uses caching for performance optimization and demonstrates scalable backend architecture.
+MovieRec is an MVP high-performing backend API for a movie recommendation platform. Built with Django REST Framework, it provides comprehensive RESTful APIs for movie and TV series discovery, user authentication, and personalized favorites management. 
+
+The system integrates with The Movie Database (TMDB) API to deliver real-time entertainment content data, implements Redis caching for optimal performance, and features comprehensive API documentation through Swagger UI.
+
+**Key Highlights:**
+
+- 🎬 **Real-time TMDB Integration** for movies and TV series data  
+- ⚡ **Redis Caching** for high-performance API responses
+- 🔐 **JWT Authentication** for secure user management
+- 📚 **Interactive Swagger Documentation** for easy API testing
+- 🐳 **Docker Containerized**  Complete containerization for easy  seamless development and deployment
 
 
 ## Features
-- **Movie & TV Series Discovery**
-    - Get weekly trending movies and TV series
-    - Search movies and TV series with query parameters
-    - Get detailed information for specific movies/TV shows
-    - Movie and TV series recommendations based on TMDB data
 
-- **User Management & Favorites**
-    - User registration and login
-    - User profile management
-    - Add/remove movies and TV shows to/from favorites
-    - View personal favorites list
+### 🎬 Movie & TV Series Discovery
+- **Trending Content**: Get weekly trending movies and TV series from TMDB
+- **Advanced Search**: Search movies and TV series with query parameters and filters
+- **Detailed Information**: Complete metadata including cast, ratings, release dates, and synopses
+- **Smart Recommendations**: AI-powered recommendations based on TMDB algorithms
+- **Content Categories**: Support for both movies and TV series with type-specific handling
 
-- **TMDB API Integration**
-    - Real-time data from The Movie Database
-    - Trending content discovery
-    - Advanced search functionality
-    - Detailed movie/series metadata
+### 👤 User Management & Authentication
+- **Secure Registration**: User account creation with email validation
+- **JWT Authentication**: Token-based authentication for secure API access
+- **User Profiles**: Comprehensive user profile management
+- **Session Management**: Secure login/logout functionality
 
-- **Performance & Architecture**
-    - Redis caching for frequently accessed data
-    - RESTful API design
-    - Comprehensive error handling
-    - Swagger API documentation
+### ⭐ Personal Favorites System
+- **Add/Remove Favorites**: Save movies and TV shows to personal favorites list
+- **Duplicate Prevention**: Smart validation prevents duplicate favorites
+- **Media Type Support**: Separate handling for movies vs TV series favorites
+- **Personalized Lists**: View and manage individual user favorites
+
+### 🚀 Performance & Architecture
+- **Redis Caching**: caching system for frequently accessed data
+  - User favorites cached for 10 minutes with smart invalidation
+  - TMDB API responses cached to reduce external API calls
+- **RESTful Design**: API endpoints following REST principles  
+- **Error Handling**: Comprehensive error responses with detailed messages
+
+
+### 📖 Developer Experience
+- **Interactive Documentation**: Full Swagger/OpenAPI documentation with testing interface
+- **Docker Support**: Complete containerization for easy development and deployment
+- **Environment Configuration**: Flexible environment-based configuration management
 
 ## Technologies Used
 
-**Backend Framework:**
-- Python 3.12
-- Django REST Framework
-
-**Database & Caching:**
-- PostgreSQL
-- Redis
-
-**DevOps & Deployment:**
-- Docker for containerization
-
-**Third-party Services:**
-- TMDB (The Movie Database) API
+| Category | Technology | Description |
+|----------|------------|-------------|
+| **Backend** | Python 3.12 | Modern runtime |
+| | Django 5.2.4 | Web framework |
+| | Django REST Framework | API toolkit |
+| **Database** | PostgreSQL | Primary database |
+| | Redis | Caching layer |
+| | django-redis | Cache integration |
+| **External APIs** | TMDB API | Movie data |
+| | Custom Client | API integration |
+| **Authentication** | Django Auth | User management |
+| | Custom User | Extended functionality |
+| **Documentation** | drf-yasg | Swagger generation |
+| | Swagger UI | Interactive testing |
+| **Deployment** | Docker | Containerization platform |
+| | Render | Cloud hosting |
+| | Gunicorn | Production server |
 
 ## Installation
 
@@ -77,7 +105,7 @@ git clone https://github.com/stephieo/MovieRec.git
 cd MovieRec
 
 # Create environment file
-cp .env.example .env
+touch .env
 # Edit .env with your TMDB API key and database credentials
 
 # Build and start services
@@ -105,45 +133,75 @@ curl http://localhost:8000/api/movies/trending/movies/
 ```
 
 ### Example API Calls
+
+
+#### **Authentication Flow**
 ```bash
-# Search for movies
-curl "http://localhost:8000/api/movies/search/movies/?query=batman"
-
-# Get movie details
-curl "http://localhost:8000/api/movies/550/"
-
-# Add to favorites (requires authentication)
-curl -X POST "http://localhost:8000/api/accounts/favorites/add/" \
-  -H "Authorization: Bearer <token>" \
+# Register a new user
+curl -X POST "https://movierec-6usy.onrender.com/api/accounts/register/" \
   -H "Content-Type: application/json" \
-  -d '{"tmdb_id": 550, "type": "movie"}'
+  -d '{
+    "username": "moviefan",
+    "email": "fan@example.com", 
+    "password": "securepass123",
+    "first_name": "Movie",
+    "last_name": "Fan"
+  }'
+
+# Login to get access token
+curl -X POST "https://movierec-6usy.onrender.com/api/accounts/login/" \
+  -H "Content-Type: application/json" \
+  -d '{
+    "username": "moviefan",
+    "password": "securepass123"
+  }'
+```
+#### **Test the Live API**
+```bash
+# Get trending movies 
+curl "https://movierec-6usy.onrender.com/api/movies/trending/movies/"
+
+# Search for movies
+curl "https://movierec-6usy.onrender.com/api/movies/search/movies/?query=batman"
+
+# Get specific movie details
+curl "https://movierec-6usy.onrender.com/api/movies/550/"
+```
+
+
+#### **Favorites Management (Requires Authentication)**
+```bash
+# Add movie to favorites
+curl -X POST "https://movierec-6usy.onrender.com/api/accounts/favorites/add/" \
+  -H "Authorization: Bearer <your-token>" \
+  -H "Content-Type: application/json" \
+  -d '{
+    "tmdb_id": 550,
+    "media_type": "movie"
+  }'
+
+# Get user's favorites list
+curl -H "Authorization: Bearer <your-token>" \
+  "https://movierec-6usy.onrender.com/api/accounts/favorites/"
+
+# Remove from favorites
+curl -X DELETE -H "Authorization: Bearer <your-token>" \
+  "https://movierec-6usy.onrender.com/api/accounts/favorites/delete/550/"
 ```
 ## Configuration
 
-### Environment Variables
-Create a `.env` file in the root directory with:
-
-```env
-# Database Configuration
-POSTGRES_DB=movierec_db
-POSTGRES_USER=movierec_user
-POSTGRES_PASSWORD=your_secure_password
-
-# TMDB API
-TMDB_API_KEY=your_tmdb_api_key_here
-
-# Django Settings
-DEBUG=True
-SECRET_KEY=your_django_secret_key
-
-# Redis Configuration
-REDIS_URL=redis://redis:6379/1
-```
+### Required Environment Variables
+- `TMDB_API_KEY` - Your TMDB API key
+- `POSTGRES_DB` - Database name  
+- `POSTGRES_USER` - Database username
+- `POSTGRES_PASSWORD` - Database password
+- `SECRET_KEY` - Django secret key
+- `REDIS_URL` - Redis connection URL
 
 ### Getting TMDB API Key
 1. Visit [TMDB API](https://www.themoviedb.org/settings/api)
-2. Create an account and request an API key
-3. Add the key to your `.env` file
+2. Create account and request API key
+3. Add key to your `.env` file
 
 ## API Documentation
 
@@ -167,21 +225,79 @@ REDIS_URL=redis://redis:6379/1
 - `DELETE /api/accounts/favorites/delete/<tmdb_id>/` - Remove from favorites
 
 ### Interactive Documentation
-Visit `/swagger/` when running locally for full API documentation with testing interface.
+- **Production**: Visit [https://movierec-6usy.onrender.com/swagger/](https://movierec-6usy.onrender.com/swagger/) for full API documentation with testing interface
+- **Local Development**: Visit `http://localhost:8000/swagger/` when running locally
 
+### API Response Examples
 
-
-## Testing
-
-How to run tests.
-```bash
-# Test Commands
+#### **Trending Movies Response**
+```json
+{
+  "page": 1,
+  "results": [
+    {
+      "id": 912649,
+      "title": "Venom: The Last Dance",
+      "overview": "Eddie and Venom are on the run...",
+      "poster_path": "/aosm8NMQ3UyoBVpSxyimorCQykC.jpg",
+      "release_date": "2024-10-22",
+      "vote_average": 6.4
+    }
+  ],
+  "total_pages": 1000,
+  "total_results": 20000
+}
 ```
 
-## License
+#### **User Favorites Response**
+```json
+[
+  {
+    "id": "123e4567-e89b-12d3-a456-426614174000",
+    "tmdb_id": 550,
+    "media_type": "movie", 
+    "item_name": "Fight Club",
+    "poster_url": "https://image.tmdb.org/t/p/w500/pB8BM7pdSp6B6Ih7QZ4DrQ3PmJK.jpg",
+    "created_at": "2025-08-09T10:30:00Z"
+  }
+]
+```
 
-Specify the license under which this project is released.
+#### **Error Response Format**
+```json
+{
+  "detail": "You have already added this movie to your favorites.",
+  "tmdb_id": 550,
+  "media_type": "movie"
+}
+```
+
+## Project Documentation
+
+For comprehensive technical documentation, visit the [`/docs`](./docs/) folder:
+
+- **[Requirements Analysis](./docs/requirements-analysis.md)** - Detailed project requirements and specifications
+- **[Database Design & ERD](./docs/database-design.md)** - Complete database schema and relationships
+- **[User Stories](./docs/user-stories.md)** - User-focused feature descriptions and acceptance criteria
+
+### Architecture Overview
+The application follows a clean architecture pattern with:
+- **API Layer**: Django REST Framework views handling HTTP requests/responses
+- **Service Layer**: Custom TMDB API client for external data integration  
+- **Data Layer**: Django ORM with PostgreSQL for persistent storage
+- **Cache Layer**: Redis for performance optimization
+- **Authentication Layer**: JWT-based user authentication system
+
+
+
+
 
 ## Authors
 
-Stephanie Olulesho - [GitHub](https://github.com/stephieo)
+**Stephanie Olulesho** - Full Stack Developer
+- GitHub: [@stephieo](https://github.com/stephieo)  
+- Project Link: [https://github.com/stephieo/MovieRec](https://github.com/stephieo/MovieRec)
+- Live Demo: [https://movierec-6usy.onrender.com](https://movierec-6usy.onrender.com)
+
+
+Built with ❤️ using Django REST Framework and deployed on Render.
