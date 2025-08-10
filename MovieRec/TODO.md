@@ -46,7 +46,7 @@
 - [x] Implement remove from favorites endpoint (DELETE)
 - [x] Add automatic TMDB data fetching (title/name, poster)
 - [x] Add content type validation (movie/tv)
-- [x] Add duplicate favorite prevention
+- [ ] Add duplicate favorite prevention
 - [ ]#FUTURE: Add favorites export functionality
 - [ ]#FUTURE: Implement favorites statistics/analytics
 
@@ -71,7 +71,7 @@
 - [x] Add movie endpoints to main URLs
 - #FUTURE[ ] Implement movie search and filtering
 - #FUTURE[ ] Add genre-based filtering
-- #FUTURE[ ] Create custom movie recommendation algorithm
+- #FUTURE[ ] Create movie recommendation algorithm
 - #FUTURE[ ] Add movie rating system
 - #FUTURE[ ] Implement user watchlist functionality
 - #FUTURE[ ] Add movie reviews and comments
@@ -79,22 +79,23 @@
 ### Movie Data
 
 - [x] Integrate with external movie API (TMDB)
-  - [x] trending weekly movies and series
+ - [x] trending weekly movies and series
   - [x] movie and series search
-  - [x] query parameter support
-  - [x] specific movie
-  - [x] request error handling 
+   - [x] query parameter support
+    - [x] specific movie
+     - [x] request error handling 
+     - [ ]item id input validation ( API level?)
       -#FUTURE: [ ] recommendation filtering
-  - [x] Add movie poster/image handling
+      -#FUTURE: [ ] Add movie poster/image handling?
 
 ### Caching & Performance - 🚀 SPRINT FOCUS
 
-- [x] Implement Redis caching for TMDB API calls
-  - [x] Cache trending movies (24 hour TTL)
-  - [x] Cache movie details (2 days TTL)
-  - [x] Cache search results (30 min TTL)
-  - [x] Cache recommendations (2 hour TTL)
-- [x] Test Redis connection and caching
+- [ ] Implement Redis caching for TMDB API calls
+  - [ ] Cache trending movies (1 hour TTL)
+  - [ ] Cache movie details (24 hour TTL)
+  - [ ] Cache search results (30 min TTL)
+  - [ ] Cache recommendations (2 hour TTL)
+- [ ] Test Redis connection and caching
 - #FUTURE[ ] Cache popular movies and genres
 - #FUTURE[ ] Add database query optimization
 - #FUTURE[ ] Implement pagination for large datasets
@@ -185,9 +186,9 @@
 
 ---
 
-## 🎯 FINAL SPRINT - DEPLOYMENT & PRESENTATION (Friday 13:30 → Saturday EOD)
+## 🎯 Current Priority Order (5 Days Sprint)
 
-**🔥 CRITICAL PATH - MUST COMPLETE:**
+**HIGH PRIORITY (Must Complete):**
 
 1. **Deployment Setup** - Get app running in production
    - [x] Configure production environment variables
@@ -201,15 +202,15 @@
    - [x] Create docs/ folder with technical documentation ✅
      - [x] Requirements analysis document ✅
      - [x] Database design & ERD documentation ✅
-   - [ ] ERD diagram 
-   - [ ] Update README.md with:
-     - [ ] Project overview and features
-     - [ ] Installation & setup instructions
-     - [ ] API endpoint documentation
-     - [ ] Environment variables guide
-     - [ ] Docker setup guide
-     - [ ] Live demo links
-     - [ ] Link to technical documentation?
+   - [x] ERD diagram ✅ (linked in README)
+   - [x] Update README.md with:
+     - [x] Project overview and features ✅
+     - [x] Installation & setup instructions ✅
+     - [x] API endpoint documentation ✅
+     - [x] Environment variables guide ✅
+     - [x] Docker setup guide ✅
+     - [x] Live demo links ✅
+     - [x] Link to technical documentation ✅
 
 3. **Presentation Materials** - Final deliverables
    - [ ] Create presentation slides (10-15 slides max)

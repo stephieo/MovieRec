@@ -310,7 +310,7 @@ class TVRecommendationsAPIView(APIView):
     Path Parameters:
     - tmdb_id: The TMDB TV series ID to base recommendations on
     """
-    permission_classes = [IsAuthenticated] 
+    permission_classes = [IsAuthenticated]
     
     @method_decorator(cache_page(60*60*2, key_prefix="recommendations_tv"))
     def get(self, request, tmdb_id):
