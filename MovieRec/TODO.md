@@ -213,13 +213,13 @@
      - [x] Link to technical documentation ✅
 
 3. **Presentation Materials** - Final deliverables
-   - [ ] Create presentation slides (10-15 slides max)
+   - [x] Create presentation slides (10-15 slides max)
      - [ ] Project overview & problem solved
      - [ ] Tech stack & architecture
      - [ ] API endpoints demo
      - [ ] Live demo walkthrough
      - [ ] Challenges & solutions
-   - [ ] Record demo video (5-10 minutes)
+   - [x] Record demo video (5-10 minutes)
      - [ ] API testing via Swagger
      - [ ] Show all major endpoints working
      - [ ] Authentication & favorites flow
